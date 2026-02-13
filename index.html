@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>療癒快捷標籤</title>
+    <style>
+        /* --- 基礎設定 --- */
+        :root {
+            --bg: #F8F9FB;
+            --card-shadow: rgba(149, 157, 165, 0.1);
+            /* 五種舒服的顏色循環 */
+            --color-0: #E3F2FD; --text-0: #1976D2; /* 淺藍 */
+            --color-1: #E8F5E9; --text-1: #388E3C; /* 淺綠 */
+            --color-2: #FFF3E0; --text-2: #F57C00; /* 淺橘 */
+            --color-3: #F3E5F5; --text-3: #7B1FA2; /* 淺紫 */
+            --color-4: #FCE4EC; --text-4: #C2185B; /* 淺粉紅 */
+            
+            --ad-height: 60px; 
+        }
+
+        body { 
+            font-family: -apple-system, system-ui, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 20px; 
+            padding-bottom: 220px; 
+        }
+        
+        /* --- 專案卡片 --- */
+        .project-block { 
+            background: white; border-radius: 20px; padding: 18px; 
+            margin-bottom: 25px; box-shadow: 0 8px 24px var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        
+        .project-title { 
+            font-size: 15px; font-weight: 700; color: #444; 
+            margin-bottom: 15px; display: flex; align-items: center;
+        }
+        .project-title::before {
+            content: ''; display: inline-block; width: 6px; height: 18px; 
+            border-radius: 3px; margin-right: 8px;
+        }
+
+        /* 根據索引自動套用區塊顏色 */
+        .block-0 .project-title::before { background: var(--text-0); }
+        .block-1 .project-title::before { background: var(--text-1); }
+        .block-2 .project-title::before { background: var(--text-2); }
+        .block-3 .project-title::before { background: var(--text-3); }
+        .block-4 .project-title::before { background: var(--text-4); }
+
+        .tag-container { display: flex; flex-wrap: wrap; gap: 12px; }
+        
+        /* --- 標籤樣式 --- */
+        .tag { 
+            padding: 12px 20px; border-radius: 15px; font-size: 15px; 
+            border: none; cursor: pointer; font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            user-select: none; -webkit-user-select: none;
+        }
+        .tag:active { transform: translateY(2px) scale(0.96); opacity: 0.8; }
+
+        .block-0 .tag { background: var(--color-0); color: var(--text-0); }
+        .block-1 .tag { background: var(--color-1); color: var(--text-1); }
+        .block-2 .tag { background: var(--color-2); color: var(--text-2); }
+        .block-3 .tag { background: var(--color-3); color: var(--text-3); }
+        .block-4 .tag { background: var(--color-4); color: var(--text-4); }
+
+        .add-btn-trigger { 
+            background: #F8F9FA; color: #BDBDBD; width: 46px; height: 46px; 
+            border-radius: 15px; border: 2px dashed #E0E0E0; font-size: 24px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- Modal 視窗 --- */
+        .modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 2000;
+        }
+        .modal-content { 
+            background: white; width: 85%; max-width: 320px; padding: 25px; 
+            border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        }
+        textarea { 
+            width: 100%; height: 120px; border: 1px solid #EEE; background: #FAFAFA;
+            border-radius: 15px; padding: 15px; box-sizing: border-box; 
+            font-size: 16px; margin: 20px 0; outline: none; resize: none;
+        }
+        .modal-btns { display: flex; gap: 12px; }
+        .modal-btns button { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 600; }
+        .save-btn { background: #444; color: white; }
+        .cancel-btn { background: #EEE; color: #666; }
+
+        /* --- 管理模式 overlay --- */
+        .edit-overlay { 
+            position: absolute; top: -6px; right: -6px; background: #FF5252; 
+            color: white; width: 20px; height: 20px; border-radius: 10px; 
+            font-size: 12px; display: none; align-items: center; justify-content: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .is-editing .edit-overlay { display: flex; }
+        .tag-wrapper { position: relative; }
+
+        /* --- 廣告與工具列配置 --- */
+        .ad-banner-container {
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            height: var(--ad-height); 
+            background: #fff; border-top: 1px solid #eee;
+            z-index: 1000; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #ccc;
+        }
+
+        .toolbar { 
+            position: fixed; 
+            bottom: calc(var(--ad-height) + 20px); 
+            right: 20px; 
+            display: flex; flex-direction: column; gap: 15px; 
+            z-index: 1000; align-items: center; 
+        }
+        
+        .tool-btn { 
+            width: 52px; height: 52px; 
+            border-radius: 50%; 
+            box-shadow: 0 6px 16px rgba(149, 157, 165, 0.2); 
+            display: flex; align-items: center; justify-content: center; 
+            border: none; 
+            transition: transform 0.1s; 
+            cursor: pointer;
+        }
+        .tool-btn:active { transform: scale(0.95); }
+
+        /* === 自製 CSS 圖示 (箭頭 + 盒子) === */
+        
+        .icon-box {
+            display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            height: 24px; position: relative;
+            color: currentColor;
+        }
+
+        /* 粗箭頭與盒子設定 */
+        [class*="arrow-thick"] { position: relative; width: 14px; height: 14px; display: flex; justify-content: center; }
+        [class*="arrow-thick"]::before { content: ''; position: absolute; width: 4px; height: 7px; background-color: currentColor; left: 50%; transform: translateX(-50%); }
+        [class*="arrow-thick"]::after { content: ''; position: absolute; width: 0; height: 0; border-style: solid; left: 50%; transform: translateX(-50%); }
+        
+        .arrow-thick-down::before { top: 0; }
+        .arrow-thick-down::after { bottom: 0; border-width: 6px 6px 0 6px; border-color: currentColor transparent transparent transparent; }
+        .arrow-thick-up::before { bottom: 0; }
+        .arrow-thick-up::after { top: 0; border-width: 0 6px 6px 6px; border-color: transparent transparent currentColor transparent; }
+
+        .tray-shape { width: 14px; height: 6px; border: 2px solid currentColor; border-top: none; border-radius: 0 0 4px 4px; margin-top: -3px; position: relative; z-index: 1; }
+
+
+        /* === SVG 圖示設定 (給一般的齒輪用) === */
+        .icon-svg {
+            width: 24px; height: 24px;
+            fill: currentColor; /* 讓 SVG 顏色跟隨文字顏色 */
+        }
+
+
+        /* 按鈕配色 */
+        .btn-export { background-color: #E3F2FD; color: #1976D2; }
+        .btn-import { background-color: #FFF3E0; color: #F57C00; }
+        .btn-setting { background-color: #F3E5F5; color: #7B1FA2; }
+
+        .main-action-btn {
+            width: 60px; height: 60px; 
+            background: #444; color: white; 
+            font-size: 28px; font-weight: 300;
+        }
+
+        .backup-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 5px; }
+
+        .toast { 
+            position: fixed; bottom: calc(var(--ad-height) + 250px); 
+            left: 50%; transform: translateX(-50%); 
+            background: rgba(0,0,0,0.7); color: white; padding: 10px 24px; 
+            border-radius: 25px; font-size: 14px; display: none; z-index: 3000; 
+        }
+    </style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<div id="ad-banner" class="ad-banner-container">
+    Advertisement Area
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin:0; text-align:center;">✨ 新增內容</h3>
+        <textarea id="tagInput" placeholder="請輸入想複製的文字..."></textarea>
+        <div class="modal-btns">
+            <button class="cancel-btn" onclick="closeModal()">取消</button>
+            <button class="save-btn" onclick="saveNewTag()">儲存</button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
+
+<div class="toolbar">
+    <div class="backup-group">
+        <button class="tool-btn btn-export" onclick="exportData()" title="備份資料">
+            <div class="icon-box">
+                <div class="arrow-thick-down"></div>
+                <div class="tray-shape"></div>
+            </div>
+        </button>
+        
+        <button class="tool-btn btn-import" onclick="triggerImport()" title="還原資料">
+            <div class="icon-box">
+                <div class="arrow-thick-up"></div>
+                <div class="tray-shape"></div>
+            </div>
+        </button>
+    </div>
+
+    <button class="tool-btn btn-setting" onclick="toggleEdit()" title="管理模式">
+        <svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.15 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+    </button>
+    
+    <button class="tool-btn main-action-btn" onclick="addNewProject()" title="新增專案">＋</button>
+</div>
+
+<div id="toast" class="toast">已複製 ✨</div>
+
+<script>
+   const _0x582e9f=_0x69ad;(function(_0xf6d8f1,_0x5a7b51){const _0x8f11a1=_0x69ad,_0x4708d1=_0xf6d8f1();while(!![]){try{const _0x154956=-parseInt(_0x8f11a1(0x1ce))/0x1*(parseInt(_0x8f11a1(0x1bf))/0x2)+-parseInt(_0x8f11a1(0x1b8))/0x3+-parseInt(_0x8f11a1(0x1e5))/0x4*(-parseInt(_0x8f11a1(0x1cd))/0x5)+-parseInt(_0x8f11a1(0x1e2))/0x6*(parseInt(_0x8f11a1(0x1ca))/0x7)+parseInt(_0x8f11a1(0x1d0))/0x8+-parseInt(_0x8f11a1(0x1bd))/0x9*(parseInt(_0x8f11a1(0x1a4))/0xa)+-parseInt(_0x8f11a1(0x18d))/0xb*(-parseInt(_0x8f11a1(0x1e7))/0xc);if(_0x154956===_0x5a7b51)break;else _0x4708d1['push'](_0x4708d1['shift']());}catch(_0x31b9f2){_0x4708d1['push'](_0x4708d1['shift']());}}}(_0x382e,0xcad4c));function _0x69ad(_0x50f5bb,_0x1dfd37){_0x50f5bb=_0x50f5bb-0x188;const _0x22c58f=_0x382e();let _0x2576a5=_0x22c58f[_0x50f5bb];return _0x2576a5;}let projects=JSON['parse'](localStorage[_0x582e9f(0x1a3)]('joyTagData'))||[{'title':_0x582e9f(0x1d2),'items':[_0x582e9f(0x18f),'好的',_0x582e9f(0x1c4)]},{'title':_0x582e9f(0x193),'items':[_0x582e9f(0x1c9),'確認完畢',_0x582e9f(0x1c0)]}],currentProjIdx=null,isEditMode=![];function save(){const _0x187fbe=_0x582e9f;localStorage['setItem']('joyTagData',JSON[_0x187fbe(0x1c7)](projects));}function render(){const _0x35f876=_0x582e9f,_0x46304f=(function(){let _0x48f068=!![];return function(_0x1d3d11,_0x23dae7){const _0x44e43a=_0x48f068?function(){const _0x5d5d73=_0x69ad;if(_0x23dae7){const _0xcc8a02=_0x23dae7[_0x5d5d73(0x189)](_0x1d3d11,arguments);return _0x23dae7=null,_0xcc8a02;}}:function(){};return _0x48f068=![],_0x44e43a;};}()),_0x53c7f4=_0x46304f(this,function(){const _0x1ce171=_0x69ad;return _0x53c7f4[_0x1ce171(0x1ab)]()['search']('(((.+)+)+)+$')[_0x1ce171(0x1ab)]()[_0x1ce171(0x18e)](_0x53c7f4)['search'](_0x1ce171(0x1de));});_0x53c7f4();const _0x4f1cca=(function(){let _0x3b87d0=!![];return function(_0x292216,_0x2ecb95){const _0x5d0068=_0x3b87d0?function(){const _0x2b2cf3=_0x69ad;if(_0x2ecb95){const _0xf4e85f=_0x2ecb95[_0x2b2cf3(0x189)](_0x292216,arguments);return _0x2ecb95=null,_0xf4e85f;}}:function(){};return _0x3b87d0=![],_0x5d0068;};}()),_0x1bc271=_0x4f1cca(this,function(){const _0x25e407=_0x69ad;let _0xdc897f;try{const _0x206816=Function('return\x20(function()\x20'+_0x25e407(0x190)+');');_0xdc897f=_0x206816();}catch(_0x823c3c){_0xdc897f=window;}const _0x10eca0=_0xdc897f[_0x25e407(0x1e0)]=_0xdc897f['console']||{},_0x5df245=[_0x25e407(0x1a0),_0x25e407(0x1b1),_0x25e407(0x1c8),'error',_0x25e407(0x1dd),_0x25e407(0x1d4),_0x25e407(0x1a1)];for(let _0x322003=0x0;_0x322003<_0x5df245[_0x25e407(0x1b0)];_0x322003++){const _0x18cf80=_0x4f1cca[_0x25e407(0x18e)][_0x25e407(0x1af)][_0x25e407(0x1a6)](_0x4f1cca),_0x4ccd0e=_0x5df245[_0x322003],_0x2d6634=_0x10eca0[_0x4ccd0e]||_0x18cf80;_0x18cf80[_0x25e407(0x1c3)]=_0x4f1cca[_0x25e407(0x1a6)](_0x4f1cca),_0x18cf80['toString']=_0x2d6634[_0x25e407(0x1ab)][_0x25e407(0x1a6)](_0x2d6634),_0x10eca0[_0x4ccd0e]=_0x18cf80;}});_0x1bc271();const _0x3e464a=document[_0x35f876(0x1eb)](_0x35f876(0x1db));_0x3e464a[_0x35f876(0x1b4)]='',projects[_0x35f876(0x198)]((_0x1b3044,_0xc66dcd)=>{const _0x4ca5ea=_0x35f876,_0x3eed38=_0x4ca5ea(0x191)+_0xc66dcd%0x5,_0x527340=document[_0x4ca5ea(0x1dc)](_0x4ca5ea(0x1e4));_0x527340[_0x4ca5ea(0x197)]=_0x4ca5ea(0x19e)+_0x3eed38;let _0x1d9738=_0x1b3044['items'][_0x4ca5ea(0x1ba)]((_0x507748,_0x1d94e6)=>_0x4ca5ea(0x19a)+(isEditMode?'is-editing':'')+_0x4ca5ea(0x1d9)+_0x507748[_0x4ca5ea(0x1d5)](/'/g,'\x5c\x27')+_0x4ca5ea(0x19d)+_0x507748+_0x4ca5ea(0x1c1)+_0xc66dcd+',\x20'+_0x1d94e6+')\x22>✕</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20')[_0x4ca5ea(0x1da)]('');_0x527340[_0x4ca5ea(0x1b4)]=_0x4ca5ea(0x199)+_0xc66dcd+_0x4ca5ea(0x1b6)+_0x1b3044[_0x4ca5ea(0x1e6)]+_0x4ca5ea(0x195)+_0x1d9738+'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22add-btn-trigger\x22\x20onclick=\x22openModal('+_0xc66dcd+_0x4ca5ea(0x18b),_0x3e464a['appendChild'](_0x527340);});}function exportData(){const _0x242602=_0x582e9f,_0x2a2ac6=JSON[_0x242602(0x1c7)](projects,null,0x2),_0x3423f=new Blob([_0x2a2ac6],{'type':_0x242602(0x1ad)}),_0x7f8eac=URL[_0x242602(0x1d7)](_0x3423f),_0x1eee24=document[_0x242602(0x1dc)]('a');_0x1eee24[_0x242602(0x1b5)]=_0x7f8eac;const _0x56a941=new Date()['toISOString']()[_0x242602(0x1b2)](0x0,0xa);_0x1eee24[_0x242602(0x1e9)]=_0x242602(0x1d8)+_0x56a941+'.json',document[_0x242602(0x1a8)]['appendChild'](_0x1eee24),_0x1eee24['click'](),document[_0x242602(0x1a8)][_0x242602(0x18a)](_0x1eee24),URL[_0x242602(0x18c)](_0x7f8eac),showToast(_0x242602(0x1c6));}function triggerImport(){const _0x79e264=_0x582e9f;document['getElementById'](_0x79e264(0x1bc))['click']();}function importData(_0x5905c0){const _0x3e980d=_0x582e9f,_0xdd2b27=_0x5905c0[_0x3e980d(0x1a5)][0x0];if(!_0xdd2b27)return;const _0x227a15=new FileReader();_0x227a15[_0x3e980d(0x188)]=function(_0x286fc){const _0x4fce9a=_0x3e980d;try{const _0x2ace34=JSON[_0x4fce9a(0x1cc)](_0x286fc[_0x4fce9a(0x196)][_0x4fce9a(0x1cf)]);Array['isArray'](_0x2ace34)?confirm(_0x4fce9a(0x192))&&(projects=_0x2ace34,save(),render(),showToast('還原成功！✨')):alert(_0x4fce9a(0x1d1));}catch(_0x2af2cd){alert(_0x4fce9a(0x1cb));}_0x5905c0[_0x4fce9a(0x19f)]='';},_0x227a15[_0x3e980d(0x1b3)](_0xdd2b27);}function showToast(_0x45b2fa){const _0x44fd6c=_0x582e9f,_0x43dd9f=document[_0x44fd6c(0x1eb)](_0x44fd6c(0x1ea));_0x43dd9f['innerText']=_0x45b2fa,_0x43dd9f[_0x44fd6c(0x1e3)][_0x44fd6c(0x1e1)]=_0x44fd6c(0x1e8),setTimeout(()=>{const _0x4812fe=_0x44fd6c;_0x43dd9f[_0x4812fe(0x1e3)][_0x4812fe(0x1e1)]=_0x4812fe(0x1df);},0x4b0);}function triggerVibration(){const _0x14e67c=_0x582e9f;if(navigator[_0x14e67c(0x194)])navigator['vibrate'](0x32);}async function copyToClipboard(_0x407e41){const _0x45bb8c=_0x582e9f;try{return await navigator[_0x45bb8c(0x1ae)][_0x45bb8c(0x19c)](_0x407e41),!![];}catch(_0x788c33){try{const _0x46d665=document[_0x45bb8c(0x1dc)](_0x45bb8c(0x1c5));_0x46d665[_0x45bb8c(0x19f)]=_0x407e41,_0x46d665[_0x45bb8c(0x1e3)][_0x45bb8c(0x1c2)]='fixed',_0x46d665[_0x45bb8c(0x1e3)][_0x45bb8c(0x1d6)]=_0x45bb8c(0x1a9),document[_0x45bb8c(0x1a8)]['appendChild'](_0x46d665),_0x46d665[_0x45bb8c(0x1ac)](),_0x46d665['select']();const _0x58b24e=document[_0x45bb8c(0x19b)]('copy');return document[_0x45bb8c(0x1a8)]['removeChild'](_0x46d665),_0x58b24e;}catch(_0x2b5903){return![];}}}function _0x382e(){const _0x49f853=['9411563fjhUZW','匯入失敗','parse','40eVPVhs','9547luvraM','result','7490352sTdUou','檔案格式錯誤','生活常用','trim','table','replace','left','createObjectURL','HoSeGa_Backup_','\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22tag\x22\x20onclick=\x22handleTagClick(\x27','join','app','createElement','exception','(((.+)+)+)+$','none','console','display','6ZjlKoO','style','div','757556AZnHlW','title','12ZVaoAN','block','download','toast','getElementById','複製失敗，請檢查權限','已複製\x20✨','onload','apply','removeChild',')\x22>+</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','revokeObjectURL','26697319UkjDAT','constructor','辛苦了','{}.constructor(\x22return\x20this\x22)(\x20)','block-','警告：這將會覆蓋您目前的設定，確定要還原嗎？','工作匯報','vibrate','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22tag-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','target','className','forEach','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22project-title\x22\x20onclick=\x22editTitle(','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22tag-wrapper\x20','execCommand','writeText','\x27)\x22>','project-block\x20','value','log','trace','items','getItem','5561090QsjjgK','files','bind','push','body','-9999px','tagInput','toString','focus','application/json','clipboard','prototype','length','warn','slice','readAsText','innerHTML','href',')\x22>','修改專案名稱','4028070hAoulc','splice','map','flex','importFile','18FSoHkk','modal','52GVgnPZ','請查閱附件','</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22edit-overlay\x22\x20onclick=\x22removeTag(','position','__proto__','沒問題','textarea','備份檔案已下載\x20✨','stringify','info','進度更新'];_0x382e=function(){return _0x49f853;};return _0x382e();}async function handleTagClick(_0x299c83){const _0x4fc3bb=_0x582e9f;if(isEditMode)return;const _0x1b4c74=await copyToClipboard(_0x299c83);_0x1b4c74?(triggerVibration(),showToast(_0x4fc3bb(0x1ed))):alert(_0x4fc3bb(0x1ec));}function openModal(_0x55ac48){const _0x436fc0=_0x582e9f;currentProjIdx=_0x55ac48,document[_0x436fc0(0x1eb)]('modal')[_0x436fc0(0x1e3)][_0x436fc0(0x1e1)]=_0x436fc0(0x1bb),document[_0x436fc0(0x1eb)](_0x436fc0(0x1aa))[_0x436fc0(0x1ac)]();}function closeModal(){const _0xdeb618=_0x582e9f;document[_0xdeb618(0x1eb)](_0xdeb618(0x1be))[_0xdeb618(0x1e3)][_0xdeb618(0x1e1)]='none',document[_0xdeb618(0x1eb)]('tagInput')[_0xdeb618(0x19f)]='';}function saveNewTag(){const _0x42f5e0=_0x582e9f,_0x1b26db=document[_0x42f5e0(0x1eb)]('tagInput')[_0x42f5e0(0x19f)][_0x42f5e0(0x1d3)]();_0x1b26db&&(projects[currentProjIdx]['items']['push'](_0x1b26db),save(),render(),closeModal());}function toggleEdit(){isEditMode=!isEditMode,render();}function removeTag(_0x329294,_0x49ff74){const _0x39efbb=_0x582e9f;projects[_0x329294][_0x39efbb(0x1a2)][_0x39efbb(0x1b9)](_0x49ff74,0x1),save(),render();}function addNewProject(){const _0x4e748c=_0x582e9f,_0x95c7cc=prompt('新增專案名稱');_0x95c7cc&&(projects[_0x4e748c(0x1a7)]({'title':_0x95c7cc,'items':[]}),save(),render());}function editTitle(_0x4e1c52){const _0x27e071=_0x582e9f;if(!isEditMode)return;const _0x7c88e0=prompt(_0x27e071(0x1b7),projects[_0x4e1c52]['title']);_0x7c88e0&&(projects[_0x4e1c52][_0x27e071(0x1e6)]=_0x7c88e0,save(),render());}render();
+</script>
+</body>
+</html>
