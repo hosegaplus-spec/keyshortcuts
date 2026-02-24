@@ -21,49 +21,20 @@
         }
 
         html { scroll-behavior: smooth; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; padding-bottom: 120px; }
 
-        body { 
-            font-family: -apple-system, system-ui, sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 20px; 
-            padding-bottom: 120px; 
-        }
-
-        /* --- 頁面標題與 LOGO --- */
-        .app-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .app-logo {
-            width: 42px; height: 42px;
-            margin-right: 12px;
-            border-radius: 10px;
-        }
+        /* --- 頁面標題與導覽 --- */
+        .app-header { display: flex; align-items: center; justify-content: center; margin-top: 20px; }
+        .app-logo { width: 42px; height: 42px; margin-right: 12px; border-radius: 10px; }
         .app-header h1 { margin: 0; font-size: 26px; color: #333; }
-        
         .nav-links { text-align: center; margin: 15px 0 40px; font-size: 14px; }
         .nav-links a { color: #666; text-decoration: none; margin: 0 10px; }
-        .nav-links a.active { color: #1976D2; font-weight: bold; }
 
-        /* --- 專案卡片 --- */
-        .project-block { 
-            background: white; border-radius: 20px; padding: 18px; 
-            margin-bottom: 25px; box-shadow: 0 8px 24px var(--card-shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-        .project-title { 
-            font-size: 15px; font-weight: 700; color: #444; 
-            margin-bottom: 15px; display: flex; align-items: center;
-            justify-content: space-between;
-        }
+        /* --- 專案卡片樣式 --- */
+        .project-block { background: white; border-radius: 20px; padding: 18px; margin-bottom: 25px; box-shadow: 0 8px 24px var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); }
+        .project-title { font-size: 15px; font-weight: 700; color: #444; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
         .project-title-text { display: flex; align-items: center; }
-        .project-title-text::before {
-            content: ''; display: inline-block; width: 6px; height: 18px; 
-            border-radius: 3px; margin-right: 8px;
-        }
+        .project-title-text::before { content: ''; display: inline-block; width: 6px; height: 18px; border-radius: 3px; margin-right: 8px; }
         .block-0 .project-title-text::before { background: var(--text-0); }
         .block-1 .project-title-text::before { background: var(--text-1); }
         .block-2 .project-title-text::before { background: var(--text-2); }
@@ -71,53 +42,55 @@
         .block-4 .project-title-text::before { background: var(--text-4); }
 
         .tag-container { display: flex; flex-wrap: wrap; gap: 12px; }
-        .tag { 
-            padding: 12px 20px; border-radius: 15px; font-size: 15px; 
-            border: none; cursor: pointer; font-weight: 500;
-            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-        }
+        .tag { padding: 12px 20px; border-radius: 15px; font-size: 15px; border: none; cursor: pointer; font-weight: 500; transition: all 0.2s; }
         .block-0 .tag { background: var(--color-0); color: var(--text-0); }
         .block-1 .tag { background: var(--color-1); color: var(--text-1); }
         .block-2 .tag { background: var(--color-2); color: var(--text-2); }
         .block-3 .tag { background: var(--color-3); color: var(--text-3); }
         .block-4 .tag { background: var(--color-4); color: var(--text-4); }
-
-        .add-btn-trigger { 
-            background: #F8F9FA; color: #BDBDBD; width: 46px; height: 46px; 
-            border-radius: 15px; border: 2px dashed #E0E0E0; font-size: 24px; 
-        }
+        .add-btn-trigger { background: #F8F9FA; color: #BDBDBD; width: 46px; height: 46px; border-radius: 15px; border: 2px dashed #E0E0E0; font-size: 24px; cursor: pointer; }
 
         /* --- 關於我們與 SEO 區塊 --- */
-        .content-booster {
-            max-width: 800px; margin: 80px auto 40px; padding: 40px 25px;
-            background: #fff; border-radius: 24px; color: #444; line-height: 1.8;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-        }
+        .content-booster { max-width: 800px; margin: 80px auto 40px; padding: 40px 25px; background: #fff; border-radius: 24px; color: #444; line-height: 1.8; box-shadow: 0 10px 40px rgba(0,0,0,0.04); }
         .content-booster h2 { color: #2c3e50; font-size: 20px; border-left: 6px solid #ffcc80; padding-left: 15px; margin: 40px 0 20px; }
-        .content-booster p { margin-bottom: 20px; font-size: 15px; text-align: justify; }
         .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
         .feature-item { background: #F8F9FB; padding: 15px; border-radius: 16px; border: 1px solid #eee; font-size: 13px; }
-        .faq-item { background: rgba(0,0,0,0.02); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
 
-        /* --- UI 元件 (Modal, Toolbar, etc.) --- */
+        /* --- 工具列與自製圖示 --- */
+        .toolbar { position: fixed; bottom: 80px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; align-items: center; }
+        .tool-btn { width: 52px; height: 52px; border-radius: 50%; box-shadow: 0 6px 16px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: transform 0.1s; }
+        .tool-btn:active { transform: scale(0.95); }
+        
+        .btn-export { background-color: #E3F2FD; color: #1976D2; }
+        .btn-import { background-color: #FFF3E0; color: #F57C00; }
+        .btn-setting { background-color: #F3E5F5; color: #7B1FA2; }
+        .main-action-btn { background: #444; color: white; font-size: 28px; width: 60px; height: 60px; }
+
+        /* CSS 圖示：箭頭與盒子 */
+        .icon-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 24px; position: relative; color: currentColor; }
+        [class*="arrow-thick"] { position: relative; width: 14px; height: 14px; display: flex; justify-content: center; }
+        [class*="arrow-thick"]::before { content: ''; position: absolute; width: 4px; height: 7px; background-color: currentColor; left: 50%; transform: translateX(-50%); }
+        [class*="arrow-thick"]::after { content: ''; position: absolute; width: 0; height: 0; border-style: solid; left: 50%; transform: translateX(-50%); }
+        .arrow-thick-down::before { top: 0; }
+        .arrow-thick-down::after { bottom: 0; border-width: 6px 6px 0 6px; border-color: currentColor transparent transparent transparent; }
+        .arrow-thick-up::before { bottom: 0; }
+        .arrow-thick-up::after { top: 0; border-width: 0 6px 6px 6px; border-color: transparent transparent currentColor transparent; }
+        .tray-shape { width: 14px; height: 6px; border: 2px solid currentColor; border-top: none; border-radius: 0 0 4px 4px; margin-top: -3px; position: relative; z-index: 1; }
+        .icon-svg { width: 24px; height: 24px; fill: currentColor; }
+
+        /* --- 其他 UI 元件 --- */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 2000; }
         .modal-content { background: white; width: 85%; max-width: 320px; padding: 25px; border-radius: 24px; }
         textarea { width: 100%; height: 120px; border: 1px solid #EEE; border-radius: 15px; padding: 15px; box-sizing: border-box; font-size: 16px; margin: 20px 0; outline: none; resize: none; }
         .modal-btns { display: flex; gap: 12px; }
-        .modal-btns button { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 600; }
+        .modal-btns button { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; }
         .save-btn { background: #444; color: white; }
         .cancel-btn { background: #EEE; color: #666; }
-        
         .edit-overlay { position: absolute; top: -6px; right: -6px; background: #FF5252; color: white; width: 20px; height: 20px; border-radius: 10px; font-size: 12px; display: none; align-items: center; justify-content: center; }
         .is-editing .edit-overlay { display: flex; }
         .tag-wrapper { position: relative; }
-
-        .toolbar { position: fixed; bottom: 80px; right: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; }
-        .tool-btn { width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 6px 16px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; background: white; font-size: 20px; }
-        .main-action-btn { background: #444; color: white; font-size: 26px; }
-
-        .ad-banner-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #fff; border-top: 1px solid #eee; z-index: 1000; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #ccc; }
         .toast { position: fixed; bottom: 150px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 10px 24px; border-radius: 25px; font-size: 14px; display: none; z-index: 3000; }
+        .ad-banner-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #fff; border-top: 1px solid #eee; z-index: 1000; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #ccc; }
     </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9328042470333926" crossorigin="anonymous"></script>
@@ -130,9 +103,7 @@
 </div>
 
 <nav class="nav-links">
-    <a href="#app">工具主體</a> | 
-    <a href="#about-us">關於我們</a> | 
-    <a href="mailto:hosega.plus@gmail.com">聯絡開發者</a>
+    <a href="#app">工具主體</a> | <a href="#about-us">關於我們</a> | <a href="mailto:hosega.plus@gmail.com">聯絡開發者</a>
 </nav>
 
 <div id="app"></div>
@@ -140,31 +111,16 @@
 <div id="about-us" class="content-booster">
     <section>
         <h2>關於我們：讓效率變得很「好勢」</h2>
-        <p>「好勢貼 (HoSeGa Paste)」的誕生，源於一位深耕於<strong>土木工程</strong>領域的開發者。在長期處理複雜的工程巡檢、鋼箱梁內部紀錄及合規性查核的實務工作中，我們發現重複輸入專業術語佔據了過多寶貴時間。這些瑣碎的動作不應成為專業決策的絆腳石。</p>
-        <p>因此，我們開發了這款基於 Web 的極簡工具，將「好勢 (Hó-sè)」——台語中順手、妥當的職場哲學，轉化為數位的複製貼上體驗。無論您是建築師、結構工程師，還是忙碌的社群小編，都能在此建立專屬的文字收納盒，實現真正的數位減壓。</p>
+        <p>「好勢貼 (HoSeGa Paste)」由一位深耕<strong>土木工程</strong>領域的開發者打造。我們深知重複輸入專業術語的繁瑣，因此創造了這款工具，將「好勢」——順手、妥當的意涵注入數位體驗。無論是專業工程師還是社群小編，都能在此建立專屬的文字收納盒。</p>
     </section>
-
-    <h2>四大核心價值</h2>
+    <h2>核心價值</h2>
     <div class="feature-grid">
-        <div class="feature-item"><strong>⚡ 極速複製</strong> 一點即刻複製到剪貼簿。</div>
-        <div class="feature-item"><strong>🛡️ 本機隱私</strong> 資料 100% 存在您的設備。</div>
-        <div class="feature-item"><strong>📂 專案分類</strong> 讓雜亂的訊息井然有序。</div>
-        <div class="feature-item"><strong>📥 自由遷移</strong> 支援 JSON 檔案備份與還原。</div>
+        <div class="feature-item"><strong>⚡ 極速複製</strong> 一點即刻複製。</div>
+        <div class="feature-item"><strong>🛡️ 本機隱私</strong> 資料 100% 存在本機。</div>
+        <div class="feature-item"><strong>📂 專案分類</strong> 訊息井然有序。</div>
+        <div class="feature-item"><strong>📥 自由遷移</strong> 支援 JSON 備份。</div>
     </div>
-
-    <h2>常見問題解答 (FAQ)</h2>
-    <div class="faq-item">
-        <strong>Q：為什麼我的資料會消失？</strong>
-        <p>A：本站不使用雲端資料庫。若您清除瀏覽器快取或使用無痕模式，資料將會消失。請務必定期匯出備份檔案。</p>
-    </div>
-    <div class="faq-item">
-        <strong>Q：如何在 PC 上使用效果更好？</strong>
-        <p>A：強力推薦將本站加入 Microsoft Edge 的「側邊欄」或 Chrome 的 PWA 模式，實現螢幕側邊隨傳隨到。</p>
-    </div>
-
-    <footer style="text-align: center; margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #999;">
-        © 2026 HoSeGa Studio | 專業生產力工具 | <a href="mailto:hosega.plus@gmail.com" style="color:#888;">Privacy Policy</a>
-    </footer>
+    <footer style="text-align: center; margin-top: 40px; font-size: 12px; color: #999;">© 2026 HoSeGa Studio</footer>
 </div>
 
 <div id="ad-banner" class="ad-banner-container">Advertisement Space</div>
@@ -173,19 +129,22 @@
     <div class="modal-content">
         <h3 style="margin:0; text-align:center;">✨ 新增內容</h3>
         <textarea id="tagInput" placeholder="請輸入想複製的文字..."></textarea>
-        <div class="modal-btns">
-            <button class="cancel-btn" onclick="closeModal()">取消</button>
-            <button class="save-btn" onclick="saveNewTag()">儲存</button>
-        </div>
+        <div class="modal-btns"><button class="cancel-btn" onclick="closeModal()">取消</button><button class="save-btn" onclick="saveNewTag()">儲存</button></div>
     </div>
 </div>
 
 <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
 
 <div class="toolbar">
-    <button class="tool-btn" onclick="exportData()" title="備份">📥</button>
-    <button class="tool-btn" onclick="triggerImport()" title="還原">📤</button>
-    <button class="tool-btn" onclick="toggleEdit()" title="管理模式">⚙️</button>
+    <button class="tool-btn btn-export" onclick="exportData()" title="備份資料">
+        <div class="icon-box"><div class="arrow-thick-down"></div><div class="tray-shape"></div></div>
+    </button>
+    <button class="tool-btn btn-import" onclick="triggerImport()" title="還原資料">
+        <div class="icon-box"><div class="arrow-thick-up"></div><div class="tray-shape"></div></div>
+    </button>
+    <button class="tool-btn btn-setting" onclick="toggleEdit()" title="管理模式">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.15 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </button>
     <button class="tool-btn main-action-btn" onclick="addNewProject()">＋</button>
 </div>
 
@@ -196,97 +155,31 @@
         {title:"客服常用", items:["您好，很高興為您服務","請稍等，為您查詢中","感謝您的耐心等待"]},
         {title:"工程術語", items:["鋼箱梁巡檢記錄","合規性查核通過","結構安全性評估"]}
     ];
-    let currentProjIdx = null;
-    let isEditMode = false;
-
+    let currentProjIdx = null, isEditMode = false;
     function save() { localStorage.setItem('hosega_data', JSON.stringify(projects)); }
-
     function render() {
-        const app = document.getElementById('app');
-        app.innerHTML = '';
+        const app = document.getElementById('app'); app.innerHTML = '';
         projects.forEach((proj, pIdx) => {
-            const block = document.createElement('div');
-            block.className = `project-block block-${pIdx % 5}`;
-            
-            const actions = isEditMode ? `
-                <div style="display:flex; gap:10px;">
-                    <button style="background:none;border:none;cursor:pointer;" onclick="editTitle(${pIdx})">✏️</button>
-                    <button style="background:none;border:none;cursor:pointer;" onclick="deleteProject(${pIdx})">🗑️</button>
-                </div>
-            ` : '';
-
-            let tagsHtml = proj.items.map((item, tIdx) => `
-                <div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}">
-                    <button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button>
-                    <div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div>
-                </div>
-            `).join('');
-            
-            block.innerHTML = `
-                <div class="project-title">
-                    <div class="project-title-text">${proj.title}</div>
-                    ${actions}
-                </div>
-                <div class="tag-container">
-                    ${tagsHtml}
-                    <button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button>
-                </div>
-            `;
+            const block = document.createElement('div'); block.className = `project-block block-${pIdx % 5}`;
+            const actions = isEditMode ? `<div style="display:flex; gap:10px;"><button style="background:none;border:none;cursor:pointer;" onclick="editTitle(${pIdx})">✏️</button><button style="background:none;border:none;cursor:pointer;" onclick="deleteProject(${pIdx})">🗑️</button></div>` : '';
+            let tagsHtml = proj.items.map((item, tIdx) => `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}"><button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`).join('');
+            block.innerHTML = `<div class="project-title"><div class="project-title-text">${proj.title}</div>${actions}</div><div class="tag-container">${tagsHtml}<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button></div>`;
             app.appendChild(block);
         });
     }
-
-    async function handleTagClick(text) {
-        if(isEditMode) return;
-        try {
-            await navigator.clipboard.writeText(text);
-            showToast("已複製 ✨");
-        } catch(e) { alert("複製失敗"); }
-    }
-
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg; t.style.display = 'block';
-        setTimeout(() => { t.style.display = 'none'; }, 1500);
-    }
-
+    async function handleTagClick(text) { if(isEditMode) return; try { await navigator.clipboard.writeText(text); showToast("已複製 ✨"); } catch(e) { alert("複製失敗"); } }
+    function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 1500); }
     function openModal(idx) { currentProjIdx = idx; document.getElementById('modal').style.display = 'flex'; document.getElementById('tagInput').focus(); }
     function closeModal() { document.getElementById('modal').style.display = 'none'; document.getElementById('tagInput').value = ''; }
-    function saveNewTag() {
-        const val = document.getElementById('tagInput').value.trim();
-        if(val) { projects[currentProjIdx].items.push(val); save(); render(); closeModal(); }
-    }
+    function saveNewTag() { const val = document.getElementById('tagInput').value.trim(); if(val) { projects[currentProjIdx].items.push(val); save(); render(); closeModal(); } }
     function toggleEdit() { isEditMode = !isEditMode; render(); }
     function removeTag(p, t) { projects[p].items.splice(t, 1); save(); render(); }
-    function addNewProject() {
-        const name = prompt("新增專案名稱");
-        if(name) { projects.push({title: name, items: []}); save(); render(); }
-    }
-    function editTitle(idx) {
-        const newTitle = prompt("修改專案名稱", projects[idx].title);
-        if(newTitle) { projects[idx].title = newTitle; save(); render(); }
-    }
-    function deleteProject(idx) {
-        if(confirm(`確定要刪除「${projects[idx].title}」嗎？`)) { projects.splice(idx, 1); save(); render(); }
-    }
-    function exportData() {
-        const blob = new Blob([JSON.stringify(projects, null, 2)], {type: "application/json"});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = `HoSeGa_Backup_${new Date().toISOString().slice(0,10)}.json`;
-        a.click();
-    }
+    function addNewProject() { const name = prompt("新增專案名稱"); if(name) { projects.push({title: name, items: []}); save(); render(); } }
+    function editTitle(idx) { const newTitle = prompt("修改專案名稱", projects[idx].title); if(newTitle) { projects[idx].title = newTitle; save(); render(); } }
+    function deleteProject(idx) { if(confirm(`確定要刪除「${projects[idx].title}」嗎？`)) { projects.splice(idx, 1); save(); render(); } }
+    function exportData() { const blob = new Blob([JSON.stringify(projects, null, 2)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `HoSeGa_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); }
     function triggerImport() { document.getElementById('importFile').click(); }
-    function importData(input) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try { projects = JSON.parse(e.target.result); save(); render(); showToast("匯入成功！"); }
-            catch(err) { alert("格式錯誤"); }
-        };
-        reader.readAsText(file);
-    }
-
+    function importData(input) { const file = input.files[0]; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("匯入成功！"); } catch(err) { alert("格式錯誤"); } }; reader.readAsText(file); }
     render();
 </script>
 </body>
