@@ -3,131 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>好勢貼 HoSeGa Paste - 專業高效文字快捷工具</title>
+    <title>好勢貼 HoSeGa Paste - 快捷文字標籤與工程生產力工具</title>
     
     <style>
+        /* --- 1. 恢復原本的馬卡龍色系與基礎設定 --- */
         :root {
-            --bg: #F4F7F9;
-            --primary: #1976D2;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --color-0: #E3F2FD; --text-0: #1976D2;
-            --color-1: #E8F5E9; --text-1: #388E3C;
-            --color-2: #FFF3E0; --text-2: #F57C00;
-            --color-3: #F3E5F5; --text-3: #7B1FA2;
-            --color-4: #FCE4EC; --text-4: #C2185B;
+            --bg: #F8F9FB;
+            --card-shadow: rgba(149, 157, 165, 0.1);
+            --color-0: #E3F2FD; --text-0: #1976D2; /* 淺藍 */
+            --color-1: #E8F5E9; --text-1: #388E3C; /* 淺綠 */
+            --color-2: #FFF3E0; --text-2: #F57C00; /* 淺橘 */
+            --color-3: #F3E5F5; --text-3: #7B1FA2; /* 淺紫 */
+            --color-4: #FCE4EC; --text-4: #C2185B; /* 淺粉 */
         }
 
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 0; color: #333; line-height: 1.7; }
-        .main-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: -apple-system, "Noto Sans TC", sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 20px; 
+            padding-bottom: 150px; 
+        }
 
         /* --- 頁面標題 --- */
-        header { text-align: center; padding: 40px 0; background: #fff; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        header h1 { margin: 0; color: #2c3e50; font-size: 32px; }
-        header p { color: #7f8c8d; margin-top: 10px; }
+        .app-header { text-align: center; margin: 30px 0 10px; }
+        .app-header h1 { margin: 0; font-size: 28px; color: #333; font-weight: 800; }
+        .app-header p { color: #888; font-size: 14px; margin-top: 5px; }
 
-        /* --- 工具區域 (佔比較小以符合內容規範) --- */
-        .app-section { background: #fff; border-radius: 20px; padding: 30px; margin-bottom: 40px; box-shadow: var(--card-shadow); }
-        .project-block { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
-        .project-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; border-left: 5px solid var(--primary); padding-left: 12px; }
-        .tag-container { display: flex; flex-wrap: wrap; gap: 10px; }
-        .tag { padding: 10px 18px; border-radius: 12px; border: none; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.2s; }
+        /* --- 導覽連結 --- */
+        .nav-links { text-align: center; margin-bottom: 40px; font-size: 14px; }
+        .nav-links a { color: #666; text-decoration: none; margin: 0 10px; }
+
+        /* --- 恢復原有的專案卡片樣式 --- */
+        .project-block { 
+            background: white; border-radius: 20px; padding: 20px; 
+            margin-bottom: 25px; box-shadow: 0 8px 24px var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .project-title { 
+            font-size: 16px; font-weight: 700; color: #444; 
+            margin-bottom: 18px; display: flex; align-items: center;
+            justify-content: space-between;
+        }
+        .project-title-text { display: flex; align-items: center; }
+        .project-title-text::before {
+            content: ''; display: inline-block; width: 6px; height: 18px; 
+            border-radius: 3px; margin-right: 10px;
+        }
+        /* 自動套用色彩 */
+        .block-0 .project-title-text::before { background: var(--text-0); }
+        .block-1 .project-title-text::before { background: var(--text-1); }
+        .block-2 .project-title-text::before { background: var(--text-2); }
+        .block-3 .project-title-text::before { background: var(--text-3); }
+        .block-4 .project-title-text::before { background: var(--text-4); }
+
+        .tag-container { display: flex; flex-wrap: wrap; gap: 12px; }
         
-        /* --- 深度內容區域 (AdSense 審核核心) --- */
-        .content-article { background: #fff; border-radius: 20px; padding: 40px; margin-bottom: 40px; box-shadow: var(--card-shadow); text-align: justify; }
-        .content-article h2 { color: #2c3e50; font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 40px; }
-        .content-article h3 { color: var(--primary); font-size: 18px; margin-top: 30px; }
-        .content-article p { font-size: 16px; color: #555; margin-bottom: 20px; }
-        .use-case-box { background: #f9f9f9; padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px dashed #ddd; }
+        /* 標籤按鈕樣式 */
+        .tag { 
+            padding: 12px 22px; border-radius: 15px; font-size: 15px; 
+            border: none; cursor: pointer; font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            position: relative;
+        }
+        .tag:active { transform: scale(0.95); opacity: 0.8; }
 
-        /* --- UI 功能元件 --- */
-        .toolbar { position: fixed; bottom: 80px; right: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; }
-        .tool-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .main-action-btn { background: #333; color: #fff; font-size: 24px; }
-        .toast { position: fixed; bottom: 150px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #fff; padding: 10px 25px; border-radius: 25px; display: none; }
+        .block-0 .tag { background: var(--color-0); color: var(--text-0); }
+        .block-1 .tag { background: var(--color-1); color: var(--text-1); }
+        .block-2 .tag { background: var(--color-2); color: var(--text-2); }
+        .block-3 .tag { background: var(--color-3); color: var(--text-3); }
+        .block-4 .tag { background: var(--color-4); color: var(--text-4); }
+
+        .add-btn-trigger { 
+            background: #F8F9FA; color: #BDBDBD; width: 48px; height: 48px; 
+            border-radius: 15px; border: 2px dashed #E0E0E0; font-size: 26px; 
+            cursor: pointer;
+        }
+
+        /* --- 2. AdSense 複查加強內容區 (以專業文件風格呈現) --- */
+        .content-doc {
+            max-width: 800px; margin: 80px auto 40px; padding: 40px;
+            background: #fff; border-radius: 24px; color: #444; line-height: 1.8;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04); text-align: justify;
+        }
+        .content-doc h2 { color: #2c3e50; font-size: 20px; border-left: 6px solid #ffcc80; padding-left: 15px; margin: 40px 0 20px; }
+        .content-doc p { margin-bottom: 20px; font-size: 15px; color: #555; }
+        .feature-box { background: #F8F9FB; padding: 20px; border-radius: 18px; margin: 20px 0; border: 1px solid #eee; font-size: 14px; }
+        
+        /* --- 3. 恢復原有的懸浮工具列與圖示 --- */
+        .toolbar { position: fixed; bottom: 85px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; align-items: center; }
+        .tool-btn { 
+            width: 52px; height: 52px; border-radius: 50%; 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12); 
+            display: flex; align-items: center; justify-content: center; 
+            border: none; cursor: pointer; background: white; transition: 0.2s;
+        }
+        .tool-btn:active { transform: scale(0.9); }
+        .btn-export { background-color: #E3F2FD; color: #1976D2; }
+        .btn-import { background-color: #FFF3E0; color: #F57C00; }
+        .btn-setting { background-color: #F3E5F5; color: #7B1FA2; }
+        .main-action-btn { background: #444; color: white; font-size: 30px; width: 60px; height: 60px; }
+
+        /* 自製 CSS 圖示：箭頭與盒子 */
+        .icon-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 24px; position: relative; color: currentColor; }
+        [class*="arrow-thick"] { position: relative; width: 14px; height: 14px; display: flex; justify-content: center; }
+        [class*="arrow-thick"]::before { content: ''; position: absolute; width: 4px; height: 7px; background-color: currentColor; left: 50%; transform: translateX(-50%); }
+        [class*="arrow-thick"]::after { content: ''; position: absolute; width: 0; height: 0; border-style: solid; left: 50%; transform: translateX(-50%); }
+        .arrow-thick-down::after { bottom: 0; border-width: 6px 6px 0 6px; border-color: currentColor transparent transparent transparent; }
+        .arrow-thick-up::after { top: 0; border-width: 0 6px 6px 6px; border-color: transparent transparent currentColor transparent; }
+        .tray-shape { width: 14px; height: 6px; border: 2px solid currentColor; border-top: none; border-radius: 0 0 4px 4px; margin-top: -3px; }
+        .icon-svg { width: 24px; height: 24px; fill: currentColor; }
+
+        /* --- 其他 UI 元件 --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-content { background: white; width: 85%; max-width: 340px; padding: 30px; border-radius: 28px; }
+        textarea { width: 100%; height: 140px; border: 1px solid #EEE; border-radius: 18px; padding: 18px; box-sizing: border-box; font-size: 16px; margin: 20px 0; outline: none; resize: none; background: #FAFAFA; }
+        .edit-overlay { position: absolute; top: -8px; right: -8px; background: #FF5252; color: white; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; display: none; align-items: center; justify-content: center; }
+        .is-editing .edit-overlay { display: flex; }
+        .ad-banner-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #fff; border-top: 1px solid #eee; z-index: 1000; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #ddd; }
+        .toast { position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 28px; border-radius: 30px; font-size: 14px; display: none; z-index: 3000; }
     </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9328042470333926" crossorigin="anonymous"></script>
 </head>
 <body>
 
-<header>
+<div class="app-header">
     <h1>好勢貼 HoSeGa Paste</h1>
-    <p>專業人士的首選生產力工具與工程自動化指南</p>
-</header>
+    <p>讓重複的動作變得很「好勢」</p>
+</div>
 
-<div class="main-container">
-    
-    <section class="app-section">
-        <div id="app"></div>
+<nav class="nav-links">
+    <a href="#app">工具主體</a> | <a href="#about-us">產品說明</a> | <a href="mailto:hosega.plus@gmail.com">聯絡我們</a>
+</nav>
+
+<div id="app"></div>
+
+<div id="about-us" class="content-doc">
+    <section>
+        <h2>產品故事：源自現場巡檢的效率革命</h2>
+        <p>「好勢貼 (HoSeGa Paste)」的構想源自於一名長期深耕**土木工程**領域的專業工程師。在進行橋樑劣化評估、鋼箱梁內部巡檢紀錄 或處理複雜的結構設計圖資時，我們發現重複輸入專業術語佔用了大量的時間。這些瑣碎的文書作業，不應成為工程師專注於決策的絆腳石。</p>
+        <p>我們將「好勢 (Hó-sè)」——順手、妥當、完美的精神注入本工具，打造出一款不需要登入雲端、注重隱私安全且具備高度自定義能力的文字百寶箱。</p>
     </section>
 
-    <article class="content-article">
-        <h2>為什麼「好勢貼」是提升效率的關鍵？</h2>
-        <p>在數位化協作的浪潮中，重複輸入重複的資訊已成為最大的隱性成本。無論是**土木工程師**在進行橋樑劣化評估、**監造人員**撰寫現場巡檢紀錄，還是**行銷小編**處理海量客情回覆，「好勢貼」提供了一個極簡且安全的本地端文字庫解決方案。</p>
+    <h2>核心技術與優點</h2>
+    <div class="feature-box">
+        <strong>⚡ 瞬時複製技術：</strong> 針對小編、客服與現場工程師開發，點擊即完成剪貼簿複製。<br>
+        <strong>🛡️ 本地端資安防護：</strong> 資料 100% 儲存於瀏覽器 LocalStorage，不經過第三方伺服器，確保敏感圖資與訊息安全。<br>
+        <strong>📂 專案化結構：</strong> 支援多分類管理，讓社群問候語與工程專業術語井然有序。
+    </div>
 
-        <div class="use-case-box">
-            <h3>案例分享：土木工程巡檢自動化</h3>
-            <p>在我們開發的 **HoSeGa SaaS 平台** 與**橋樑檢測 AI 系統** 中，我們觀察到工程師在箱梁內部巡檢 時，常需反覆輸入「裂縫寬度超標」、「鋼筋鏽蝕嚴重」等術語。透過好勢貼，這些術語能被一鍵調用，大幅縮短文書作業時間。</p>
-        </div>
+    <h2>常見問題解答 (FAQ)</h2>
+    <p><strong>Q：如何備份我在好勢貼建立的資料？</strong><br>
+    A：您可以透過右下角的「📥 匯出」功能，將資料匯出為標準 JSON 檔案保存。這也是我們在開發 AI 橋檢系統與自動填表工具時，確保資料一致性的重要環節。</p>
+    
+    <p><strong>Q：這款工具能在舊手機上使用嗎？</strong><br>
+    A：是的，無論是新款旗艦機或是舊型 Android/iPhone，只要能開啟瀏覽器，皆能獲得流暢的馬卡龍色系操作介面。</p>
 
-        <h2>如何優化您的數位工作流？</h2>
-        <h3>1. 善用 Microsoft Edge 側邊欄</h3>
-        <p>將「好勢貼」釘選於 Edge 側邊欄，能在不切換視窗的情況下隨時複製標籤。這對於需要頻繁在 Excel 與網頁表單間切換的自動化填表工作 尤為重要。</p>
-        
-        <h3>2. 本地端儲存與隱私安全</h3>
-        <p>我們堅持採用瀏覽器 LocalStorage 技術，所有資料 100% 儲存在您的設備中。在處理涉及工程圖資 或個人資料的敏感場景時，能提供超越雲端服務的資安防護。</p>
-
-        <h3>3. 結合 AI 與自動化工具</h3>
-        <p>我們正積極探索將標籤系統與 n8n 自動化流程及 Synology NAS 整合，旨在打造一個全自動的數據收集與報表生成環境。</p>
-
-        <h2>常見問題與技術支援 (FAQ)</h2>
-        <p><strong>Q：如何備份我的專案資料？</strong><br>
-        A：您可以點擊右下角的「📥 匯出」按鈕，將所有標籤儲存為標準 JSON 格式。這也是我們在開發六足巡檢機器人 時常用的參數交換方式。</p>
-        <p><strong>Q：這款工具是否支援行動裝置？</strong><br>
-        A：是的，好勢貼採用回應式設計，無論是舊型 iPhone 還是 Android 設備，皆能獲得流暢的操作體驗。</p>
-    </article>
-
-    <footer style="text-align: center; color: #95a5a6; padding: 40px 0; font-size: 13px;">
-        © 2026 HoSeGa Studio | <a href="mailto:hosega.plus@gmail.com" style="color:#1976D2;">隱私權政策</a> | <a href="mailto:hosega.plus@gmail.com" style="color:#1976D2;">服務條款</a>
+    <footer style="text-align: center; margin-top: 40px; font-size: 12px; color: #bbb;">
+        © 2026 HoSeGa Studio | <a href="mailto:hosega.plus@gmail.com" style="color:#aaa; text-decoration:none;">Privacy Policy</a>
     </footer>
 </div>
 
+<div id="ad-banner" class="ad-banner-container">Advertisement Space</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin:0; text-align:center;">✨ 新增內容</h3>
+        <textarea id="tagInput" placeholder="請輸入想複製的文字..."></textarea>
+        <div style="display:flex; justify-content:center;">
+            <button class="cancel-btn" onclick="closeModal()">取消</button>
+            <button class="save-btn" onclick="saveNewTag()">儲存</button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
+
 <div class="toolbar">
-    <button class="tool-btn" onclick="exportData()" title="匯出">📥</button>
-    <button class="tool-btn" onclick="triggerImport()" title="匯入">📤</button>
-    <button class="tool-btn" onclick="toggleEdit()" title="管理">⚙️</button>
+    <button class="tool-btn btn-export" onclick="exportData()" title="備份資料">
+        <div class="icon-box"><div class="arrow-thick-down"></div><div class="tray-shape"></div></div>
+    </button>
+    <button class="tool-btn btn-import" onclick="triggerImport()" title="還原資料">
+        <div class="icon-box"><div class="arrow-thick-up"></div><div class="tray-shape"></div></div>
+    </button>
+    <button class="tool-btn btn-setting" onclick="toggleEdit()" title="管理模式">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.15 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </button>
     <button class="tool-btn main-action-btn" onclick="addNewProject()">＋</button>
 </div>
 
 <div id="toast" class="toast">已複製 ✨</div>
-<input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
 
 <script>
-    let projects = JSON.parse(localStorage.getItem('hosega_v3_data')) || [
-        {title:"工程巡檢常用", items:["橋樑劣化評估建議","鋼筋鏽蝕檢測完成","裂縫寬度 > 0.3mm","建議即時進行補強"]},
-        {title:"客服快捷回覆", items:["您好，很高興為您服務","請稍候，正為您查詢","已收到您的回報，處理中"]}
+    let projects = JSON.parse(localStorage.getItem('hosega_v5_data')) || [
+        {title:"客服回覆範本", items:["您好，很高興為您服務！","請稍候，正為您查詢系統資料","感謝您的耐心等待與配合"]},
+        {title:"工程巡檢常用", items:["橋樑劣化評估：建議即時維修","裂縫寬度超標，需結構補強","巡檢完畢，紀錄已上傳系統"]}
     ];
-    let isEditMode = false;
-
-    function save() { localStorage.setItem('hosega_v3_data', JSON.stringify(projects)); }
+    let currentProjIdx = null, isEditMode = false;
+    function save() { localStorage.setItem('hosega_v5_data', JSON.stringify(projects)); }
     function render() {
         const app = document.getElementById('app'); app.innerHTML = '';
         projects.forEach((proj, pIdx) => {
             const block = document.createElement('div'); block.className = `project-block block-${pIdx % 5}`;
-            const actions = isEditMode ? `<button onclick="editTitle(${pIdx})">✏️</button><button onclick="deleteProject(${pIdx})">🗑️</button>` : '';
-            const tags = proj.items.map((item, tIdx) => `<button class="tag" onclick="handleTagClick('${item}')">${item}${isEditMode ? `<span onclick="removeTag(${pIdx},${tIdx})">✕</span>` : ''}</button>`).join('');
-            block.innerHTML = `<div class="project-title"><span>${proj.title}</span>${actions}</div><div class="tag-container">${tags}<button onclick="openAddTag(${pIdx})">+</button></div>`;
+            const actions = isEditMode ? `<div style="display:flex; gap:12px;"><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="editTitle(${pIdx})">✏️</button><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="deleteProject(${pIdx})">🗑️</button></div>` : '';
+            let tagsHtml = proj.items.map((item, tIdx) => `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}"><button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`).join('');
+            block.innerHTML = `<div class="project-title"><div class="project-title-text">${proj.title}</div>${actions}</div><div class="tag-container">${tagsHtml}<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button></div>`;
             app.appendChild(block);
         });
     }
-    async function handleTagClick(t) { if(isEditMode) return; await navigator.clipboard.writeText(t); showToast("已複製 ✨"); }
-    function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(()=>t.style.display='none', 1500); }
+    async function handleTagClick(text) { if(isEditMode) return; try { await navigator.clipboard.writeText(text); showToast("已複製 ✨"); } catch(e) { alert("複製失敗"); } }
+    function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 1500); }
+    function openModal(idx) { currentProjIdx = idx; document.getElementById('modal').style.display = 'flex'; document.getElementById('tagInput').focus(); }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; document.getElementById('tagInput').value = ''; }
+    function saveNewTag() { const val = document.getElementById('tagInput').value.trim(); if(val) { projects[currentProjIdx].items.push(val); save(); render(); closeModal(); } }
     function toggleEdit() { isEditMode = !isEditMode; render(); }
-    function addNewProject() { const n = prompt("專案名稱"); if(n) { projects.push({title:n, items:[]}); save(); render(); } }
-    function openAddTag(idx) { const t = prompt("輸入標籤內容"); if(t) { projects[idx].items.push(t); save(); render(); } }
-    function exportData() { const b = new Blob([JSON.stringify(projects)], {type:"application/json"}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `HoSeGa_Backup.json`; a.click(); }
+    function removeTag(p, t) { projects[p].items.splice(t, 1); save(); render(); }
+    function addNewProject() { const name = prompt("新增專案名稱"); if(name) { projects.push({title: name, items: []}); save(); render(); } }
+    function editTitle(idx) { const newTitle = prompt("修改專案名稱", projects[idx].title); if(newTitle) { projects[idx].title = newTitle; save(); render(); } }
+    function deleteProject(idx) { if(confirm(`確定要刪除「${projects[idx].title}」專案嗎？`)) { projects.splice(idx, 1); save(); render(); } }
+    function exportData() { const blob = new Blob([JSON.stringify(projects, null, 2)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `HoSeGa_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast("備份下載成功 ✨"); }
     function triggerImport() { document.getElementById('importFile').click(); }
-    function importData(i) { const f = i.files[0]; const r = new FileReader(); r.onload = (e) => { projects = JSON.parse(e.target.result); save(); render(); }; r.readAsText(f); }
+    function importData(input) { const file = input.files[0]; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("資料還原成功！"); } catch(err) { alert("檔案格式不符"); } }; reader.readAsText(file); }
     render();
 </script>
 </body>
