@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>好勢貼 HoSeGa Paste - 快捷文字標籤與工程生產力工具</title>
+    <title>好勢貼 HoSeGa Paste - 快捷文字標籤</title>
     
     <style>
         /* --- 1. 恢復原本的馬卡龍色系與基礎設定 --- */
@@ -136,15 +136,14 @@
 </div>
 
 <nav class="nav-links">
-    <a href="#app">工具主體</a> | <a href="#about-us">產品說明</a> | <a href="mailto:hosega.plus@gmail.com">聯絡我們</a>
+    <a href="#app">工具主體</a> | <a href="#about-us">說明</a> | <a href="mailto:hosega.plus@gmail.com">聯絡我們</a>
 </nav>
 
 <div id="app"></div>
 
 <div id="about-us" class="content-doc">
     <section>
-        <h2>產品故事：源自現場巡檢的效率革命</h2>
-        <p>「好勢貼 (HoSeGa Paste)」的構想源自於一名長期深耕**土木工程**領域的專業工程師。在進行橋樑劣化評估、鋼箱梁內部巡檢紀錄 或處理複雜的結構設計圖資時，我們發現重複輸入專業術語佔用了大量的時間。這些瑣碎的文書作業，不應成為工程師專注於決策的絆腳石。</p>
+        <h2>效率革命</h2>
         <p>我們將「好勢 (Hó-sè)」——順手、妥當、完美的精神注入本工具，打造出一款不需要登入雲端、注重隱私安全且具備高度自定義能力的文字百寶箱。</p>
     </section>
 
@@ -152,12 +151,12 @@
     <div class="feature-box">
         <strong>⚡ 瞬時複製技術：</strong> 針對小編、客服與現場工程師開發，點擊即完成剪貼簿複製。<br>
         <strong>🛡️ 本地端資安防護：</strong> 資料 100% 儲存於瀏覽器 LocalStorage，不經過第三方伺服器，確保敏感圖資與訊息安全。<br>
-        <strong>📂 專案化結構：</strong> 支援多分類管理，讓社群問候語與工程專業術語井然有序。
+        <strong>📂 專案化結構：</strong> 支援多分類管理，讓社群問候語與專業術語井然有序。
     </div>
 
     <h2>常見問題解答 (FAQ)</h2>
     <p><strong>Q：如何備份我在好勢貼建立的資料？</strong><br>
-    A：您可以透過右下角的「📥 匯出」功能，將資料匯出為標準 JSON 檔案保存。這也是我們在開發 AI 橋檢系統與自動填表工具時，確保資料一致性的重要環節。</p>
+    A：您可以透過右下角的「匯出」功能，將資料匯出為標準 JSON 檔案保存。這也是我們在開發 AI 橋檢系統與自動填表工具時，確保資料一致性的重要環節。</p>
     
     <p><strong>Q：這款工具能在舊手機上使用嗎？</strong><br>
     A：是的，無論是新款旗艦機或是舊型 Android/iPhone，只要能開啟瀏覽器，皆能獲得流暢的馬卡龍色系操作介面。</p>
@@ -200,7 +199,7 @@
 <script>
     let projects = JSON.parse(localStorage.getItem('hosega_v5_data')) || [
         {title:"客服回覆範本", items:["您好，很高興為您服務！","請稍候，正為您查詢系統資料","感謝您的耐心等待與配合"]},
-        {title:"工程巡檢常用", items:["橋樑劣化評估：建議即時維修","裂縫寬度超標，需結構補強","巡檢完畢，紀錄已上傳系統"]}
+        {title:"常用", items:["建議維修","持續例行養護"]}
     ];
     let currentProjIdx = null, isEditMode = false;
     function save() { localStorage.setItem('hosega_v5_data', JSON.stringify(projects)); }
@@ -229,5 +228,7 @@
     function importData(input) { const file = input.files[0]; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("資料還原成功！"); } catch(err) { alert("檔案格式不符"); } }; reader.readAsText(file); }
     render();
 </script>
+    <script src="https://quge5.com/88/tag.min.js" data-zone="214968" async data-cfasync="false"></script>
 </body>
 </html>
+
