@@ -124,6 +124,12 @@
         .is-editing .edit-overlay { display: flex; }
         .ad-banner-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #fff; border-top: 1px solid #eee; z-index: 1000; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #ddd; }
         .toast { position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 28px; border-radius: 30px; font-size: 14px; display: none; z-index: 3000; }
+
+        #container-cf5ab1a35a4fc5bfe75e79a51e5310d1 {
+    border-radius: 15px; /* 符合馬卡龍標籤的圓角 */
+    overflow: hidden;    /* 確保廣告圖片不會超出圓角 */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
     </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9328042470333926" crossorigin="anonymous"></script>
@@ -166,20 +172,9 @@
     </footer>
 </div>
 
-<div id="ad-banner" class="ad-banner-container"><div class="project-title">
-        <div class="project-title-text" style="color: #888;"></div>
-    </div>
-    <div class="tag-container" style="justify-content: center; padding: 10px 0;">
-        <a href="https://omg10.com/4/10664707" target="_blank" class="tag" 
-           style="background: #E3F2FD; color: #1976D2; text-decoration: none; display: flex; align-items: center; gap: 8px;">
-            ✨ 點擊觀看廣告支持開發者
-        </a>
-        
-        <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" 
-           style="background: #FCE4EC; color: #C2185B; text-decoration: none;">
-            ☕ 熱情贊助~請我喝咖啡
-        </a>
-    </div></div>
+<div id="ad-banner" class="ad-banner-container">
+       <script async="async" data-cfasync="false" src="https://pl28826985.effectivegatecpm.com/cf5ab1a35a4fc5bfe75e79a51e5310d1/invoke.js"></script>
+<div id="container-cf5ab1a35a4fc5bfe75e79a51e5310d1"></div></div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
@@ -240,9 +235,32 @@
     function triggerImport() { document.getElementById('importFile').click(); }
     function importData(input) { const file = input.files[0]; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("資料還原成功！"); } catch(err) { alert("檔案格式不符"); } }; reader.readAsText(file); }
     render();
+    
 </script>
+    <div class="project-block block-4" style="border: 2px dashed #FFD54F; background: #FFFDE7; margin-top: 50px;">
+    <div class="project-title">
+        <div class="project-title-text" style="color: #F57F17;">✨ 支持好勢貼持續進化</div>
+    </div>
+    
+    <div class="tag-container" style="justify-content: center; padding: 15px 0;">
+        <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" 
+           style="background: #E8F5E9; color: #2E7D32; text-decoration: none; width: 42%; text-align: center; font-weight: bold;">
+           ☕ 綠界請喝咖啡
+        </a>
+
+        <a href="https://www.effectivegatecpm.com/fdz03i5n6h?key=61a4e11311da9b2dc2212a87673511c7" target="_blank" class="tag" 
+           style="background: #E3F2FD; color: #1565C0; text-decoration: none; width: 42%; text-align: center; font-weight: bold;">
+           🚀 點擊廣告支持
+        </a>
+    </div>
+    
+    <p style="text-align: center; font-size: 11px; color: #999; margin-top: 10px;">
+        您的支持將用於維護伺服器與開發 AI 橋樑檢測工具
+    </p>
+</div>
 </body>
 </html>
+
 
 
 
