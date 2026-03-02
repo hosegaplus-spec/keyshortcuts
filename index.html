@@ -130,6 +130,23 @@
     overflow: hidden;    /* 確保廣告圖片不會超出圓角 */
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
+        /* 預設隱藏，根據寬度顯示 */
+    .ad-desktop { display: block; }
+    .ad-mobile { display: none; }
+
+    @media (max-width: 768px) {
+        .ad-desktop { display: none; }
+        .ad-mobile { display: block; }
+    }
+    
+    .ad-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
     </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9328042470333926" crossorigin="anonymous"></script>
@@ -173,8 +190,31 @@
 </div>
 
 <div id="ad-banner" class="ad-banner-container">
-       <script async="async" data-cfasync="false" src="https://pl28826985.effectivegatecpm.com/cf5ab1a35a4fc5bfe75e79a51e5310d1/invoke.js"></script>
-<div id="container-cf5ab1a35a4fc5bfe75e79a51e5310d1"></div></div>
+       <<div class="ad-wrapper">
+    <div class="ad-desktop"><script>
+  atOptions = {
+    'key' : 'df7e287c01baadc380f8c97edf6ebd34',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/df7e287c01baadc380f8c97edf6ebd34/invoke.js"></script>
+        </div>
+
+    <div class="ad-mobile"><script>
+  atOptions = {
+    'key' : 'b7090a104cf725dcafeb06f9fea26f97',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/b7090a104cf725dcafeb06f9fea26f97/invoke.js"></script>
+        </div>
+</div></div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
@@ -245,7 +285,7 @@
     <div class="tag-container" style="justify-content: center; padding: 15px 0;">
         <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" 
            style="background: #E8F5E9; color: #2E7D32; text-decoration: none; width: 42%; text-align: center; font-weight: bold;">
-           ☕ 綠界請喝咖啡
+           ☕ 熱情贊助支持
         </a>
 
         <a href="https://www.effectivegatecpm.com/fdz03i5n6h?key=61a4e11311da9b2dc2212a87673511c7" target="_blank" class="tag" 
@@ -260,6 +300,7 @@
 </div>
 </body>
 </html>
+
 
 
 
