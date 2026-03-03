@@ -155,7 +155,7 @@
 
 <div class="app-header">
     <h1>好勢貼 HoSeGa Paste</h1>
-    <p>讓重複的動作變得很「好勢」</p>
+    <p>讓重複的動作變得很「厚勢」</p>
 </div>
 
 <nav class="nav-links">
@@ -167,22 +167,22 @@
 <div id="about-us" class="content-doc">
     <section>
         <h2>效率革命</h2>
-        <p>我們將「好勢 (Hó-sè)」——順手、妥當、完美的精神注入本工具，打造出一款不需要登入雲端、注重隱私安全且具備高度自定義能力的文字百寶箱。</p>
+        <p>我們將「好勢 (Hó-sè)」——順手、妥當、完美的精神注入本工具，打造出一款不需要登入雲端、具備高度自定義能力的文字剪貼百寶箱。</p>
     </section>
 
     <h2>核心技術與優點</h2>
     <div class="feature-box">
-        <strong>⚡ 瞬時複製技術：</strong> 針對小編、客服與現場工程師開發，點擊即完成剪貼簿複製。<br>
-        <strong>🛡️ 本地端資安防護：</strong> 資料 100% 儲存於瀏覽器 LocalStorage，不經過第三方伺服器，確保敏感圖資與訊息安全。<br>
-        <strong>📂 專案化結構：</strong> 支援多分類管理，讓社群問候語與專業術語井然有序。
+        <strong>⚡ 瞬時複製技術：</strong> 針對重複的行政作業、現場工作、封閉系統開發，點擊即完成剪貼簿複製。<br>
+        <strong>🛡️ 本地端個人化資料：</strong> 資料 100% 儲存於瀏覽器，不經過第三方伺服器，常用習慣帶著走，更換平台使用也順暢。<br>
+        <strong>📂 專案化結構：</strong> 支援多分類管理，讓專業術語井然有序。
     </div>
 
     <h2>常見問題解答 (FAQ)</h2>
     <p><strong>Q：如何備份我在好勢貼建立的資料？</strong><br>
-    A：您可以透過右下角的「匯出」功能，將資料匯出為標準 JSON 檔案保存。這也是我們在開發 AI 橋檢系統與自動填表工具時，確保資料一致性的重要環節。</p>
+    A：您可以透過右下角的「匯出」功能，將資料匯出為標準 JSON 檔案保存，並且攜帶至不同電腦或裝置匯入即可使用你個人專屬的快捷鍵。</p>
     
     <p><strong>Q：這款工具能在舊手機上使用嗎？</strong><br>
-    A：是的，無論是新款旗艦機或是舊型 Android/iPhone，只要能開啟瀏覽器，皆能獲得流暢的馬卡龍色系操作介面。</p>
+    A：是的，無論是新款旗艦機或是舊型 Android/iPhone，只要能開啟瀏覽器都能使用。</p>
 
     <footer style="text-align: center; margin-top: 40px; font-size: 12px; color: #bbb;">
         © 2026 HoSeGa Studio | <a href="mailto:hosega.plus@gmail.com" style="color:#aaa; text-decoration:none;">Privacy Policy</a>
@@ -247,7 +247,7 @@
 <script>
     let projects = JSON.parse(localStorage.getItem('hosega_v5_data')) || [
         {title:"客服回覆範本", items:["您好，很高興為您服務！","請稍候，正為您查詢系統資料","感謝您的耐心等待與配合"]},
-        {title:"常用", items:["建議維修","持續例行養護"]}
+        {title:"常用", items:["建議修改","持續例行工作"]}
     ];
     let currentProjIdx = null, isEditMode = false;
     function save() { localStorage.setItem('hosega_v5_data', JSON.stringify(projects)); }
@@ -295,11 +295,12 @@
     </div>
     
     <p style="text-align: center; font-size: 11px; color: #999; margin-top: 10px;">
-        您的支持將用於維護伺服器與開發 AI 橋樑檢測工具
+        您的支持將用於維護伺服器與開發
     </p>
 </div>
 </body>
 </html>
+
 
 
 
