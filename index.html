@@ -6,38 +6,37 @@
     <title>好勢貼 HoSeGa Paste - 快捷文字標籤</title>
     
     <style>
-        /* --- 1. 恢復原本的馬卡龍色系與基礎設定 --- */
+        /* --- 1. 核心配色與變數 --- */
         :root {
             --bg: #F8F9FB;
             --card-shadow: rgba(149, 157, 165, 0.1);
-            --color-0: #E3F2FD; --text-0: #1976D2; /* 淺藍 */
-            --color-1: #E8F5E9; --text-1: #388E3C; /* 淺綠 */
-            --color-2: #FFF3E0; --text-2: #F57C00; /* 淺橘 */
-            --color-3: #F3E5F5; --text-3: #7B1FA2; /* 淺紫 */
-            --color-4: #FCE4EC; --text-4: #C2185B; /* 淺粉 */
+            --color-0: #E3F2FD; --text-0: #1976D2;
+            --color-1: #E8F5E9; --text-1: #388E3C;
+            --color-2: #FFF3E0; --text-2: #F57C00;
+            --color-3: #F3E5F5; --text-3: #7B1FA2;
+            --color-4: #FCE4EC; --text-4: #C2185B;
         }
 
         html { scroll-behavior: smooth; }
         body { 
-            font-family: -apple-system, "Noto Sans TC", sans-serif; 
+            font-family: -apple-system, "Noto Sans TC", "Microsoft JhengHei", sans-serif; 
             background: var(--bg); 
             margin: 0; 
             padding: 20px; 
-            padding-bottom: 150px; 
+            padding-bottom: 160px; /* 為底部廣告留空間 */
         }
 
-        /* --- 頁面標題 --- */
+        /* --- 2. 頁面組件 --- */
         .app-header { text-align: center; margin: 30px 0 10px; }
-        .app-header h1 { margin: 0; font-size: 28px; color: #333; font-weight: 800; }
+        .app-header h1 { margin: 0; font-size: 28px; color: #333; font-weight: 800; letter-spacing: -0.5px; }
         .app-header p { color: #888; font-size: 14px; margin-top: 5px; }
 
-        /* --- 導覽連結 --- */
         .nav-links { text-align: center; margin-bottom: 40px; font-size: 14px; }
-        .nav-links a { color: #666; text-decoration: none; margin: 0 10px; }
+        .nav-links a { color: #666; text-decoration: none; margin: 0 10px; border-bottom: 1px solid transparent; transition: 0.2s; }
+        .nav-links a:hover { border-bottom: 1px solid #666; }
 
-        /* --- 恢復原有的專案卡片樣式 --- */
         .project-block { 
-            background: white; border-radius: 20px; padding: 20px; 
+            background: white; border-radius: 22px; padding: 22px; 
             margin-bottom: 25px; box-shadow: 0 8px 24px var(--card-shadow);
             border: 1px solid rgba(0,0,0,0.02);
         }
@@ -49,9 +48,10 @@
         .project-title-text { display: flex; align-items: center; }
         .project-title-text::before {
             content: ''; display: inline-block; width: 6px; height: 18px; 
-            border-radius: 3px; margin-right: 10px;
+            border-radius: 3px; margin-right: 12px;
         }
-        /* 自動套用色彩 */
+        
+        /* 區塊顏色標記 */
         .block-0 .project-title-text::before { background: var(--text-0); }
         .block-1 .project-title-text::before { background: var(--text-1); }
         .block-2 .project-title-text::before { background: var(--text-2); }
@@ -59,17 +59,15 @@
         .block-4 .project-title-text::before { background: var(--text-4); }
 
         .tag-container { display: flex; flex-wrap: wrap; gap: 12px; }
-        
-        /* 標籤按鈕樣式 */
         .tag { 
             padding: 12px 22px; border-radius: 15px; font-size: 15px; 
             border: none; cursor: pointer; font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
             position: relative;
         }
         .tag:active { transform: scale(0.95); opacity: 0.8; }
 
+        /* 標籤色系套用 */
         .block-0 .tag { background: var(--color-0); color: var(--text-0); }
         .block-1 .tag { background: var(--color-1); color: var(--text-1); }
         .block-2 .tag { background: var(--color-2); color: var(--text-2); }
@@ -79,21 +77,21 @@
         .add-btn-trigger { 
             background: #F8F9FA; color: #BDBDBD; width: 48px; height: 48px; 
             border-radius: 15px; border: 2px dashed #E0E0E0; font-size: 26px; 
-            cursor: pointer;
+            cursor: pointer; transition: 0.2s;
         }
+        .add-btn-trigger:hover { border-color: #BBB; color: #999; }
 
-        /* --- 2. AdSense 複查加強內容區 (以專業文件風格呈現) --- */
+        /* --- 3. 關於與支持卡片 --- */
         .content-doc {
             max-width: 800px; margin: 80px auto 40px; padding: 40px;
             background: #fff; border-radius: 24px; color: #444; line-height: 1.8;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.04); text-align: justify;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
         }
         .content-doc h2 { color: #2c3e50; font-size: 20px; border-left: 6px solid #ffcc80; padding-left: 15px; margin: 40px 0 20px; }
-        .content-doc p { margin-bottom: 20px; font-size: 15px; color: #555; }
         .feature-box { background: #F8F9FB; padding: 20px; border-radius: 18px; margin: 20px 0; border: 1px solid #eee; font-size: 14px; }
-        
-        /* --- 3. 恢復原有的懸浮工具列與圖示 --- */
-        .toolbar { position: fixed; bottom: 85px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; align-items: center; }
+
+        /* --- 4. 懸浮工具列與精緻圖示 --- */
+        .toolbar { position: fixed; bottom: 85px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1001; align-items: center; }
         .tool-btn { 
             width: 52px; height: 52px; border-radius: 50%; 
             box-shadow: 0 6px 18px rgba(0,0,0,0.12); 
@@ -106,50 +104,41 @@
         .btn-setting { background-color: #F3E5F5; color: #7B1FA2; }
         .main-action-btn { background: #444; color: white; font-size: 30px; width: 60px; height: 60px; }
 
-        /* 自製 CSS 圖示：箭頭與盒子 */
-        .icon-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 24px; position: relative; color: currentColor; }
-        [class*="arrow-thick"] { position: relative; width: 14px; height: 14px; display: flex; justify-content: center; }
-        [class*="arrow-thick"]::before { content: ''; position: absolute; width: 4px; height: 7px; background-color: currentColor; left: 50%; transform: translateX(-50%); }
+        /* 修正後的 CSS 圖示：確保箭頭完整 */
+        .icon-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 30px; position: relative; color: currentColor; }
+        [class*="arrow-thick"] { position: relative; width: 14px; height: 16px; display: flex; justify-content: center; }
+        [class*="arrow-thick"]::before { content: ''; position: absolute; width: 4px; height: 9px; background-color: currentColor; left: 50%; transform: translateX(-50%); }
         [class*="arrow-thick"]::after { content: ''; position: absolute; width: 0; height: 0; border-style: solid; left: 50%; transform: translateX(-50%); }
-        .arrow-thick-down::after { bottom: 0; border-width: 6px 6px 0 6px; border-color: currentColor transparent transparent transparent; }
-        .arrow-thick-up::after { top: 0; border-width: 0 6px 6px 6px; border-color: transparent transparent currentColor transparent; }
-        .tray-shape { width: 14px; height: 6px; border: 2px solid currentColor; border-top: none; border-radius: 0 0 4px 4px; margin-top: -3px; }
+        .arrow-thick-down::before { top: 0; }
+        .arrow-thick-down::after { bottom: 0; border-width: 7px 7px 0 7px; border-color: currentColor transparent transparent transparent; }
+        .arrow-thick-up::after { top: 0; border-width: 0 7px 7px 7px; border-color: transparent transparent currentColor transparent; }
+        .arrow-thick-up::before { bottom: 0; }
+        .tray-shape { width: 16px; height: 6px; border: 2px solid currentColor; border-top: none; border-radius: 0 0 4px 4px; margin-top: 2px; }
         .icon-svg { width: 24px; height: 24px; fill: currentColor; }
 
-        /* --- 其他 UI 元件 --- */
+        /* --- 5. 底部廣告與響應式設定 --- */
+        .ad-banner-container { position: fixed; bottom: 0; left: 0; width: 100%; min-height: 60px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); border-top: 1px solid #eee; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .ad-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; padding: 5px 0; }
+        .ad-desktop { display: block; }
+        .ad-mobile { display: none; }
+
+        @media (max-width: 768px) {
+            .ad-desktop { display: none; }
+            .ad-mobile { display: block; }
+            body { padding: 15px; padding-bottom: 140px; }
+        }
+
+        /* 其他 UI */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-content { background: white; width: 85%; max-width: 340px; padding: 30px; border-radius: 28px; }
+        .modal-content { background: white; width: 85%; max-width: 340px; padding: 30px; border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
         textarea { width: 100%; height: 140px; border: 1px solid #EEE; border-radius: 18px; padding: 18px; box-sizing: border-box; font-size: 16px; margin: 20px 0; outline: none; resize: none; background: #FAFAFA; }
-        .edit-overlay { position: absolute; top: -8px; right: -8px; background: #FF5252; color: white; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; display: none; align-items: center; justify-content: center; }
+        .edit-overlay { position: absolute; top: -8px; right: -8px; background: #FF5252; color: white; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; display: none; align-items: center; justify-content: center; cursor: pointer; }
         .is-editing .edit-overlay { display: flex; }
-        .ad-banner-container { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #fff; border-top: 1px solid #eee; z-index: 1000; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #ddd; }
         .toast { position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 28px; border-radius: 30px; font-size: 14px; display: none; z-index: 3000; }
-
-        #container-cf5ab1a35a4fc5bfe75e79a51e5310d1 {
-    border-radius: 15px; /* 符合馬卡龍標籤的圓角 */
-    overflow: hidden;    /* 確保廣告圖片不會超出圓角 */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-}
-        /* 預設隱藏，根據寬度顯示 */
-    .ad-desktop { display: block; }
-    .ad-mobile { display: none; }
-
-    @media (max-width: 768px) {
-        .ad-desktop { display: none; }
-        .ad-mobile { display: block; }
-    }
-    
-    .ad-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 90px;
-        margin-bottom: 20px;
-        overflow: hidden;
-    }
+        
+        .save-btn { background: #444; color: white; border: none; padding: 10px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+        .cancel-btn { background: none; border: none; color: #999; padding: 10px 20px; cursor: pointer; }
     </style>
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9328042470333926" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -163,6 +152,25 @@
 </nav>
 
 <div id="app"></div>
+
+<div class="project-block block-4" style="border: 2px dashed #FFD54F; background: #FFFDE7; margin-top: 40px;">
+    <div class="project-title">
+        <div class="project-title-text" style="color: #F57F17;">✨ 支持好勢貼持續進化</div>
+    </div>
+    <div class="tag-container" style="justify-content: center; padding: 15px 0;">
+        <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" 
+           style="background: #E8F5E9; color: #2E7D32; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">
+           ☕ 熱情贊助支持
+        </a>
+        <a href="https://www.effectivegatecpm.com/fdz03i5n6h?key=61a4e11311da9b2dc2212a87673511c7" target="_blank" class="tag" 
+           style="background: #E3F2FD; color: #1565C0; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">
+           🚀 點擊廣告支持
+        </a>
+    </div>
+    <p style="text-align: center; font-size: 11px; color: #999; margin-top: 10px;">
+        您的支持將用於維護伺服器與開發
+    </p>
+</div>
 
 <div id="about-us" class="content-doc">
     <section>
@@ -190,44 +198,21 @@
 </div>
 
 <div id="ad-banner" class="ad-banner-container">
-       <<div class="ad-wrapper">
-    <div class="ad-desktop"><script>
-  atOptions = {
-    'key' : 'df7e287c01baadc380f8c97edf6ebd34',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/df7e287c01baadc380f8c97edf6ebd34/invoke.js"></script>
+    <div class="ad-wrapper">
+        <div class="ad-desktop">
+            <script type="text/javascript">
+                atOptions = { 'key' : 'df7e287c01baadc380f8c97edf6ebd34', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/df7e287c01baadc380f8c97edf6ebd34/invoke.js"></script>
         </div>
-
-    <div class="ad-mobile"><script>
-  atOptions = {
-    'key' : 'b7090a104cf725dcafeb06f9fea26f97',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/b7090a104cf725dcafeb06f9fea26f97/invoke.js"></script>
-        </div>
-</div></div>
-
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <h3 style="margin:0; text-align:center;">✨ 新增內容</h3>
-        <textarea id="tagInput" placeholder="請輸入想複製的文字..."></textarea>
-        <div style="display:flex; justify-content:center;">
-            <button class="cancel-btn" onclick="closeModal()">取消</button>
-            <button class="save-btn" onclick="saveNewTag()">儲存</button>
+        <div class="ad-mobile">
+            <script type="text/javascript">
+                atOptions = { 'key' : 'b7090a104cf725dcafeb06f9fea26f97', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/b7090a104cf725dcafeb06f9fea26f97/invoke.js"></script>
         </div>
     </div>
 </div>
-
-<input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
 
 <div class="toolbar">
     <button class="tool-btn btn-export" onclick="exportData()" title="備份資料">
@@ -242,25 +227,41 @@
     <button class="tool-btn main-action-btn" onclick="addNewProject()">＋</button>
 </div>
 
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin:0; text-align:center;">✨ 新增內容</h3>
+        <textarea id="tagInput" placeholder="請輸入想複製的文字..."></textarea>
+        <div style="display:flex; justify-content:center; gap: 10px;">
+            <button class="cancel-btn" onclick="closeModal()">取消</button>
+            <button class="save-btn" onclick="saveNewTag()">儲存</button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
 <div id="toast" class="toast">已複製 ✨</div>
 
 <script>
+    // 預設與本地儲存資料
     let projects = JSON.parse(localStorage.getItem('hosega_v5_data')) || [
         {title:"客服回覆範本", items:["您好，很高興為您服務！","請稍候，正為您查詢系統資料","感謝您的耐心等待與配合"]},
-        {title:"常用", items:["建議修改","持續例行工作"]}
+        {title:"常用詞彙", items:["建議修改","持續例行工作"]}
     ];
     let currentProjIdx = null, isEditMode = false;
+
     function save() { localStorage.setItem('hosega_v5_data', JSON.stringify(projects)); }
+
     function render() {
         const app = document.getElementById('app'); app.innerHTML = '';
         projects.forEach((proj, pIdx) => {
             const block = document.createElement('div'); block.className = `project-block block-${pIdx % 5}`;
             const actions = isEditMode ? `<div style="display:flex; gap:12px;"><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="editTitle(${pIdx})">✏️</button><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="deleteProject(${pIdx})">🗑️</button></div>` : '';
-            let tagsHtml = proj.items.map((item, tIdx) => `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}"><button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`).join('');
+            let tagsHtml = proj.items.map((item, tIdx) => `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}" style="position:relative; display:inline-block;"><button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`).join('');
             block.innerHTML = `<div class="project-title"><div class="project-title-text">${proj.title}</div>${actions}</div><div class="tag-container">${tagsHtml}<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button></div>`;
             app.appendChild(block);
         });
     }
+
     async function handleTagClick(text) { if(isEditMode) return; try { await navigator.clipboard.writeText(text); showToast("已複製 ✨"); } catch(e) { alert("複製失敗"); } }
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 1500); }
     function openModal(idx) { currentProjIdx = idx; document.getElementById('modal').style.display = 'flex'; document.getElementById('tagInput').focus(); }
@@ -273,38 +274,10 @@
     function deleteProject(idx) { if(confirm(`確定要刪除「${projects[idx].title}」專案嗎？`)) { projects.splice(idx, 1); save(); render(); } }
     function exportData() { const blob = new Blob([JSON.stringify(projects, null, 2)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `HoSeGa_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast("備份下載成功 ✨"); }
     function triggerImport() { document.getElementById('importFile').click(); }
-    function importData(input) { const file = input.files[0]; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("資料還原成功！"); } catch(err) { alert("檔案格式不符"); } }; reader.readAsText(file); }
-    render();
-    
-</script>
-    <div class="project-block block-4" style="border: 2px dashed #FFD54F; background: #FFFDE7; margin-top: 50px;">
-    <div class="project-title">
-        <div class="project-title-text" style="color: #F57F17;">✨ 支持好勢貼持續進化</div>
-    </div>
-    
-    <div class="tag-container" style="justify-content: center; padding: 15px 0;">
-        <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" 
-           style="background: #E8F5E9; color: #2E7D32; text-decoration: none; width: 42%; text-align: center; font-weight: bold;">
-           ☕ 熱情贊助支持
-        </a>
+    function importData(input) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("資料還原成功！"); } catch(err) { alert("檔案格式不符"); } }; reader.readAsText(file); }
 
-        <a href="https://www.effectivegatecpm.com/fdz03i5n6h?key=61a4e11311da9b2dc2212a87673511c7" target="_blank" class="tag" 
-           style="background: #E3F2FD; color: #1565C0; text-decoration: none; width: 42%; text-align: center; font-weight: bold;">
-           🚀 點擊廣告支持
-        </a>
-    </div>
-    
-    <p style="text-align: center; font-size: 11px; color: #999; margin-top: 10px;">
-        您的支持將用於維護伺服器與開發
-    </p>
-</div>
+    render();
+</script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
