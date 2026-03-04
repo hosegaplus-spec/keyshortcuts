@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>好勢貼 HoSeGa Paste - 快捷文字標籤</title>
     
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
     <style>
         /* --- 1. 核心配色與變數 --- */
         :root {
@@ -58,7 +60,7 @@
         .block-3 .project-title-text::before { background: var(--text-3); }
         .block-4 .project-title-text::before { background: var(--text-4); }
 
-        .tag-container { display: flex; flex-wrap: wrap; gap: 12px; }
+        .tag-container { display: flex; flex-wrap: wrap; gap: 12px; min-height: 40px; }
         .tag { 
             padding: 12px 22px; border-radius: 15px; font-size: 15px; 
             border: none; cursor: pointer; font-weight: 500;
@@ -79,7 +81,11 @@
             border-radius: 15px; border: 2px dashed #E0E0E0; font-size: 26px; 
             cursor: pointer; transition: 0.2s;
         }
-        .add-btn-trigger:hover { border-color: #BBB; color: #999; }
+
+        /* 拖拉視覺效果 */
+        .sortable-ghost { opacity: 0.2; background: #adb5bd !important; border-radius: 15px; }
+        .is-editing .tag { cursor: grab; opacity: 0.8; pointer-events: none; }
+        .is-editing .project-title-text { cursor: grab; }
 
         /* --- 3. 關於與支持卡片 --- */
         .content-doc {
@@ -102,6 +108,7 @@
         .btn-export { background-color: #E3F2FD; color: #1976D2; }
         .btn-import { background-color: #FFF3E0; color: #F57C00; }
         .btn-setting { background-color: #F3E5F5; color: #7B1FA2; }
+        .btn-setting.active { background-color: #444; color: white; transform: rotate(45deg); }
         .main-action-btn { background: #444; color: white; font-size: 30px; width: 60px; height: 60px; }
 
         /* 修正後的 CSS 圖示：確保箭頭完整 */
@@ -130,7 +137,7 @@
 
         /* 其他 UI */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-content { background: white; width: 85%; max-width: 340px; padding: 30px; border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+        .modal-content { background: white; width: 85%; max-width: 340px; padding: 30px; border-radius: 28px; }
         textarea { width: 100%; height: 140px; border: 1px solid #EEE; border-radius: 18px; padding: 18px; box-sizing: border-box; font-size: 16px; margin: 20px 0; outline: none; resize: none; background: #FAFAFA; }
         .edit-overlay { position: absolute; top: -8px; right: -8px; background: #FF5252; color: white; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; display: none; align-items: center; justify-content: center; cursor: pointer; }
         .is-editing .edit-overlay { display: flex; }
@@ -221,8 +228,8 @@
     <button class="tool-btn btn-import" onclick="triggerImport()" title="還原資料">
         <div class="icon-box"><div class="arrow-thick-up"></div><div class="tray-shape"></div></div>
     </button>
-    <button class="tool-btn btn-setting" onclick="toggleEdit()" title="管理模式">
-        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.15 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    <button class="tool-btn btn-setting" id="settingBtn" onclick="toggleEdit()" title="管理模式">
+        <svg style="width:24px;height:24px;fill:currentColor;" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.15 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38.103.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
     </button>
     <button class="tool-btn main-action-btn" onclick="addNewProject()">＋</button>
 </div>
@@ -242,7 +249,6 @@
 <div id="toast" class="toast">已複製 ✨</div>
 
 <script>
-    // 預設與本地儲存資料
     let projects = JSON.parse(localStorage.getItem('hosega_v5_data')) || [
         {title:"客服回覆範本", items:["您好，很高興為您服務！","請稍候，正為您查詢系統資料","感謝您的耐心等待與配合"]},
         {title:"常用詞彙", items:["建議修改","持續例行工作"]}
@@ -257,8 +263,32 @@
             const block = document.createElement('div'); block.className = `project-block block-${pIdx % 5}`;
             const actions = isEditMode ? `<div style="display:flex; gap:12px;"><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="editTitle(${pIdx})">✏️</button><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="deleteProject(${pIdx})">🗑️</button></div>` : '';
             let tagsHtml = proj.items.map((item, tIdx) => `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}" style="position:relative; display:inline-block;"><button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`).join('');
-            block.innerHTML = `<div class="project-title"><div class="project-title-text">${proj.title}</div>${actions}</div><div class="tag-container">${tagsHtml}<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button></div>`;
+            block.innerHTML = `<div class="project-title"><div class="project-title-text">${proj.title}</div>${actions}</div><div class="tag-container" data-pidx="${pIdx}">${tagsHtml}${isEditMode ? '' : `<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button>`}</div>`;
             app.appendChild(block);
+        });
+        initSortable();
+    }
+
+    function initSortable() {
+        new Sortable(document.getElementById('app'), {
+            animation: 150, handle: '.project-title-text', disabled: !isEditMode, ghostClass: 'sortable-ghost',
+            onEnd: (evt) => {
+                const moved = projects.splice(evt.oldIndex, 1)[0];
+                projects.splice(evt.newIndex, 0, moved);
+                save(); render();
+            }
+        });
+        document.querySelectorAll('.tag-container').forEach(el => {
+            new Sortable(el, {
+                group: 'sharedTags', animation: 150, disabled: !isEditMode, ghostClass: 'sortable-ghost', filter: '.add-btn-trigger',
+                onEnd: (evt) => {
+                    const fromIdx = parseInt(evt.from.dataset.pidx);
+                    const toIdx = parseInt(evt.to.dataset.pidx);
+                    const movedTag = projects[fromIdx].items.splice(evt.oldIndex, 1)[0];
+                    projects[toIdx].items.splice(evt.newIndex, 0, movedTag);
+                    save(); render();
+                }
+            });
         });
     }
 
@@ -267,15 +297,14 @@
     function openModal(idx) { currentProjIdx = idx; document.getElementById('modal').style.display = 'flex'; document.getElementById('tagInput').focus(); }
     function closeModal() { document.getElementById('modal').style.display = 'none'; document.getElementById('tagInput').value = ''; }
     function saveNewTag() { const val = document.getElementById('tagInput').value.trim(); if(val) { projects[currentProjIdx].items.push(val); save(); render(); closeModal(); } }
-    function toggleEdit() { isEditMode = !isEditMode; render(); }
+    function toggleEdit() { isEditMode = !isEditMode; document.getElementById('settingBtn').classList.toggle('active', isEditMode); render(); }
     function removeTag(p, t) { projects[p].items.splice(t, 1); save(); render(); }
     function addNewProject() { const name = prompt("新增專案名稱"); if(name) { projects.push({title: name, items: []}); save(); render(); } }
-    function editTitle(idx) { const newTitle = prompt("修改專案名稱", projects[idx].title); if(newTitle) { projects[idx].title = newTitle; save(); render(); } }
+    function editTitle(idx) { const n = prompt("修改專案名稱", projects[idx].title); if(n) { projects[idx].title = n; save(); render(); } }
     function deleteProject(idx) { if(confirm(`確定要刪除「${projects[idx].title}」專案嗎？`)) { projects.splice(idx, 1); save(); render(); } }
     function exportData() { const blob = new Blob([JSON.stringify(projects, null, 2)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `HoSeGa_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast("備份下載成功 ✨"); }
     function triggerImport() { document.getElementById('importFile').click(); }
     function importData(input) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("資料還原成功！"); } catch(err) { alert("檔案格式不符"); } }; reader.readAsText(file); }
-
     render();
 </script>
 
