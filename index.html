@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>好勢貼 HoSeGa Paste - 快捷文字標籤</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
     <style>
+        /* --- 1. 核心配色與變數 --- */
         :root {
             --bg: #F8F9FB;
             --card-shadow: rgba(149, 157, 165, 0.1);
@@ -20,79 +19,125 @@
 
         html { scroll-behavior: smooth; }
         body { 
-            font-family: -apple-system, "Noto Sans TC", sans-serif; 
-            background: var(--bg); margin: 0; padding: 20px; padding-bottom: 160px;
+            font-family: -apple-system, "Noto Sans TC", "Microsoft JhengHei", sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 20px; 
+            padding-bottom: 160px; /* 為底部廣告留空間 */
         }
 
+        /* --- 2. 頁面組件 --- */
         .app-header { text-align: center; margin: 30px 0 10px; }
-        .app-header h1 { margin: 0; font-size: 28px; color: #333; font-weight: 800; }
+        .app-header h1 { margin: 0; font-size: 28px; color: #333; font-weight: 800; letter-spacing: -0.5px; }
         .app-header p { color: #888; font-size: 14px; margin-top: 5px; }
+
+        .nav-links { text-align: center; margin-bottom: 40px; font-size: 14px; }
+        .nav-links a { color: #666; text-decoration: none; margin: 0 10px; border-bottom: 1px solid transparent; transition: 0.2s; }
+        .nav-links a:hover { border-bottom: 1px solid #666; }
 
         .project-block { 
             background: white; border-radius: 22px; padding: 22px; 
             margin-bottom: 25px; box-shadow: 0 8px 24px var(--card-shadow);
             border: 1px solid rgba(0,0,0,0.02);
-            transition: background 0.3s ease;
         }
-        
-        /* 拖拉中視覺 */
-        .sortable-ghost { opacity: 0.2; background: #adb5bd !important; border-radius: 15px; }
-        .sortable-chosen { transform: scale(1.05); }
-
         .project-title { 
             font-size: 16px; font-weight: 700; color: #444; 
             margin-bottom: 18px; display: flex; align-items: center;
             justify-content: space-between;
         }
-        
-        .drag-handle { cursor: grab; padding: 5px; color: #ccc; display: none; font-size: 20px; }
-        .is-editing .drag-handle { display: block; }
-
-        .tag-container { 
-            display: flex; flex-wrap: wrap; gap: 12px; 
-            min-height: 50px; /* 增加最小高度，方便拖入空專案 */
-            padding: 5px;
-            border-radius: 10px;
-            transition: background 0.2s;
+        .project-title-text { display: flex; align-items: center; }
+        .project-title-text::before {
+            content: ''; display: inline-block; width: 6px; height: 18px; 
+            border-radius: 3px; margin-right: 12px;
         }
-        .is-editing .tag-container { background: rgba(0,0,0,0.02); border: 1px dashed #eee; }
+        
+        /* 區塊顏色標記 */
+        .block-0 .project-title-text::before { background: var(--text-0); }
+        .block-1 .project-title-text::before { background: var(--text-1); }
+        .block-2 .project-title-text::before { background: var(--text-2); }
+        .block-3 .project-title-text::before { background: var(--text-3); }
+        .block-4 .project-title-text::before { background: var(--text-4); }
 
+        .tag-container { display: flex; flex-wrap: wrap; gap: 12px; }
         .tag { 
             padding: 12px 22px; border-radius: 15px; font-size: 15px; 
             border: none; cursor: pointer; font-weight: 500;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            position: relative;
         }
-        .is-editing .tag { cursor: grab; opacity: 0.8; pointer-events: none; }
+        .tag:active { transform: scale(0.95); opacity: 0.8; }
 
-        /* 顏色標記 */
-        .project-title-text { display: flex; align-items: center; }
-        .project-title-text::before { content: ''; display: inline-block; width: 6px; height: 18px; border-radius: 3px; margin-right: 12px; }
-        .block-0 .project-title-text::before { background: var(--text-0); } .block-0 .tag { background: var(--color-0); color: var(--text-0); }
-        .block-1 .project-title-text::before { background: var(--text-1); } .block-1 .tag { background: var(--color-1); color: var(--text-1); }
-        .block-2 .project-title-text::before { background: var(--text-2); } .block-2 .tag { background: var(--color-2); color: var(--text-2); }
-        .block-3 .project-title-text::before { background: var(--text-3); } .block-3 .tag { background: var(--color-3); color: var(--text-3); }
-        .block-4 .project-title-text::before { background: var(--text-4); } .block-4 .tag { background: var(--color-4); color: var(--text-4); }
+        /* 標籤色系套用 */
+        .block-0 .tag { background: var(--color-0); color: var(--text-0); }
+        .block-1 .tag { background: var(--color-1); color: var(--text-1); }
+        .block-2 .tag { background: var(--color-2); color: var(--text-2); }
+        .block-3 .tag { background: var(--color-3); color: var(--text-3); }
+        .block-4 .tag { background: var(--color-4); color: var(--text-4); }
 
-        .edit-overlay { 
-            position: absolute; top: -8px; right: -8px; 
-            background: #FF5252; color: white; width: 22px; height: 22px; 
-            border-radius: 11px; font-size: 12px; display: none; 
-            align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+        .add-btn-trigger { 
+            background: #F8F9FA; color: #BDBDBD; width: 48px; height: 48px; 
+            border-radius: 15px; border: 2px dashed #E0E0E0; font-size: 26px; 
+            cursor: pointer; transition: 0.2s;
         }
-        .is-editing .edit-overlay { display: flex; }
+        .add-btn-trigger:hover { border-color: #BBB; color: #999; }
 
-        /* 懸浮按鈕 */
-        .toolbar { position: fixed; bottom: 85px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1001; }
-        .tool-btn { width: 52px; height: 52px; border-radius: 50%; box-shadow: 0 6px 18px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; background: white; transition: 0.2s; }
-        .btn-setting.active { background-color: #444; color: white; transform: rotate(45deg); }
+        /* --- 3. 關於與支持卡片 --- */
+        .content-doc {
+            max-width: 800px; margin: 80px auto 40px; padding: 40px;
+            background: #fff; border-radius: 24px; color: #444; line-height: 1.8;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+        }
+        .content-doc h2 { color: #2c3e50; font-size: 20px; border-left: 6px solid #ffcc80; padding-left: 15px; margin: 40px 0 20px; }
+        .feature-box { background: #F8F9FB; padding: 20px; border-radius: 18px; margin: 20px 0; border: 1px solid #eee; font-size: 14px; }
+
+        /* --- 4. 懸浮工具列與精緻圖示 --- */
+        .toolbar { position: fixed; bottom: 85px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1001; align-items: center; }
+        .tool-btn { 
+            width: 52px; height: 52px; border-radius: 50%; 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12); 
+            display: flex; align-items: center; justify-content: center; 
+            border: none; cursor: pointer; background: white; transition: 0.2s;
+        }
+        .tool-btn:active { transform: scale(0.9); }
+        .btn-export { background-color: #E3F2FD; color: #1976D2; }
+        .btn-import { background-color: #FFF3E0; color: #F57C00; }
+        .btn-setting { background-color: #F3E5F5; color: #7B1FA2; }
         .main-action-btn { background: #444; color: white; font-size: 30px; width: 60px; height: 60px; }
 
+        /* 修正後的 CSS 圖示：確保箭頭完整 */
+        .icon-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 30px; position: relative; color: currentColor; }
+        [class*="arrow-thick"] { position: relative; width: 14px; height: 16px; display: flex; justify-content: center; }
+        [class*="arrow-thick"]::before { content: ''; position: absolute; width: 4px; height: 9px; background-color: currentColor; left: 50%; transform: translateX(-50%); }
+        [class*="arrow-thick"]::after { content: ''; position: absolute; width: 0; height: 0; border-style: solid; left: 50%; transform: translateX(-50%); }
+        .arrow-thick-down::before { top: 0; }
+        .arrow-thick-down::after { bottom: 0; border-width: 7px 7px 0 7px; border-color: currentColor transparent transparent transparent; }
+        .arrow-thick-up::after { top: 0; border-width: 0 7px 7px 7px; border-color: transparent transparent currentColor transparent; }
+        .arrow-thick-up::before { bottom: 0; }
+        .tray-shape { width: 16px; height: 6px; border: 2px solid currentColor; border-top: none; border-radius: 0 0 4px 4px; margin-top: 2px; }
+        .icon-svg { width: 24px; height: 24px; fill: currentColor; }
+
+        /* --- 5. 底部廣告與響應式設定 --- */
         .ad-banner-container { position: fixed; bottom: 0; left: 0; width: 100%; min-height: 60px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); border-top: 1px solid #eee; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .ad-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; padding: 5px 0; }
+        .ad-desktop { display: block; }
+        .ad-mobile { display: none; }
+
+        @media (max-width: 768px) {
+            .ad-desktop { display: none; }
+            .ad-mobile { display: block; }
+            body { padding: 15px; padding-bottom: 140px; }
+        }
+
+        /* 其他 UI */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-content { background: white; width: 85%; max-width: 340px; padding: 30px; border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+        textarea { width: 100%; height: 140px; border: 1px solid #EEE; border-radius: 18px; padding: 18px; box-sizing: border-box; font-size: 16px; margin: 20px 0; outline: none; resize: none; background: #FAFAFA; }
+        .edit-overlay { position: absolute; top: -8px; right: -8px; background: #FF5252; color: white; width: 22px; height: 22px; border-radius: 11px; font-size: 12px; display: none; align-items: center; justify-content: center; cursor: pointer; }
+        .is-editing .edit-overlay { display: flex; }
         .toast { position: fixed; bottom: 160px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 28px; border-radius: 30px; font-size: 14px; display: none; z-index: 3000; }
         
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-content { background: white; width: 85%; max-width: 340px; padding: 30px; border-radius: 28px; }
-        textarea { width: 100%; height: 140px; border: 1px solid #EEE; border-radius: 18px; padding: 18px; box-sizing: border-box; font-size: 16px; margin: 20px 0; outline: none; resize: none; background: #FAFAFA; }
+        .save-btn { background: #444; color: white; border: none; padding: 10px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+        .cancel-btn { background: none; border: none; color: #999; padding: 10px 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -102,109 +147,137 @@
     <p>讓重複的動作變得很「厚勢」</p>
 </div>
 
+<nav class="nav-links">
+    <a href="#app">工具主體</a> | <a href="#about-us">說明</a> | <a href="mailto:hosega.plus@gmail.com">聯絡我們</a>
+</nav>
+
 <div id="app"></div>
 
+<div class="project-block block-4" style="border: 2px dashed #FFD54F; background: #FFFDE7; margin-top: 40px;">
+    <div class="project-title">
+        <div class="project-title-text" style="color: #F57F17;">✨ 支持好勢貼持續進化</div>
+    </div>
+    <div class="tag-container" style="justify-content: center; padding: 15px 0;">
+        <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" 
+           style="background: #E8F5E9; color: #2E7D32; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">
+           ☕ 熱情贊助支持
+        </a>
+        <a href="https://www.effectivegatecpm.com/fdz03i5n6h?key=61a4e11311da9b2dc2212a87673511c7" target="_blank" class="tag" 
+           style="background: #E3F2FD; color: #1565C0; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">
+           🚀 點擊廣告支持
+        </a>
+    </div>
+    <p style="text-align: center; font-size: 11px; color: #999; margin-top: 10px;">
+        您的支持將用於維護伺服器與開發
+    </p>
+</div>
+
+<div id="about-us" class="content-doc">
+    <section>
+        <h2>效率革命</h2>
+        <p>我們將「好勢 (Hó-sè)」——順手、妥當、完美的精神注入本工具，打造出一款不需要登入雲端、具備高度自定義能力的文字剪貼百寶箱。</p>
+    </section>
+
+    <h2>核心技術與優點</h2>
+    <div class="feature-box">
+        <strong>⚡ 瞬時複製：</strong> 針對重複的行政作業、現場工作、封閉系統開發，點擊即完成剪貼簿複製。<br>
+        <strong>🛡️ 本地端個人化資料：</strong> 資料 100% 儲存於瀏覽器，不經過第三方伺服器，常用習慣帶著走，更換平台使用也順暢。<br>
+        <strong>📂 專案化結構：</strong> 支援多分類管理，讓專業術語井然有序。
+    </div>
+
+    <h2>常見問題解答 (FAQ)</h2>
+    <p><strong>Q：如何備份我在好勢貼建立的資料？</strong><br>
+    A：您可以透過右下角的「匯出」功能，將資料匯出為標準 JSON 檔案保存，並且攜帶至不同電腦或裝置匯入即可使用你個人專屬的快捷鍵。</p>
+    
+    <p><strong>Q：這款工具能在舊手機上使用嗎？</strong><br>
+    A：是的，無論是新款旗艦機或是舊型 Android/iPhone，只要能開啟瀏覽器都能使用。</p>
+
+    <footer style="text-align: center; margin-top: 40px; font-size: 12px; color: #bbb;">
+        © 2026 HoSeGa Studio | <a href="mailto:hosega.plus@gmail.com" style="color:#aaa; text-decoration:none;">Privacy Policy</a>
+    </footer>
+</div>
+
+<div id="ad-banner" class="ad-banner-container">
+    <div class="ad-wrapper">
+        <div class="ad-desktop">
+            <script type="text/javascript">
+                atOptions = { 'key' : 'df7e287c01baadc380f8c97edf6ebd34', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/df7e287c01baadc380f8c97edf6ebd34/invoke.js"></script>
+        </div>
+        <div class="ad-mobile">
+            <script type="text/javascript">
+                atOptions = { 'key' : 'b7090a104cf725dcafeb06f9fea26f97', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/b7090a104cf725dcafeb06f9fea26f97/invoke.js"></script>
+        </div>
+    </div>
+</div>
+
 <div class="toolbar">
-    <button class="tool-btn btn-export" onclick="exportData()">備份</button>
-    <button class="tool-btn btn-import" onclick="triggerImport()">還原</button>
-    <button class="tool-btn btn-setting" id="settingBtn" onclick="toggleEdit()">⚙️</button>
+    <button class="tool-btn btn-export" onclick="exportData()" title="備份資料">
+        <div class="icon-box"><div class="arrow-thick-down"></div><div class="tray-shape"></div></div>
+    </button>
+    <button class="tool-btn btn-import" onclick="triggerImport()" title="還原資料">
+        <div class="icon-box"><div class="arrow-thick-up"></div><div class="tray-shape"></div></div>
+    </button>
+    <button class="tool-btn btn-setting" onclick="toggleEdit()" title="管理模式">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.15 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </button>
     <button class="tool-btn main-action-btn" onclick="addNewProject()">＋</button>
 </div>
 
-<div id="modal" class="modal"><div class="modal-content"><h3>✨ 新增內容</h3><textarea id="tagInput"></textarea><button onclick="saveNewTag()">儲存</button></div></div>
-<input type="file" id="importFile" style="display:none;" onchange="importData(this)">
-<div id="toast" class="toast"></div>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin:0; text-align:center;">✨ 新增內容</h3>
+        <textarea id="tagInput" placeholder="請輸入想複製的文字..."></textarea>
+        <div style="display:flex; justify-content:center; gap: 10px;">
+            <button class="cancel-btn" onclick="closeModal()">取消</button>
+            <button class="save-btn" onclick="saveNewTag()">儲存</button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(this)">
+<div id="toast" class="toast">已複製 ✨</div>
 
 <script>
+    // 預設與本地儲存資料
     let projects = JSON.parse(localStorage.getItem('hosega_v5_data')) || [
-        {title:"範本 A", items:["標籤 1", "標籤 2"]},
-        {title:"範本 B", items:["標籤 3"]}
+        {title:"客服回覆範本", items:["您好，很高興為您服務！","請稍候，正為您查詢系統資料","感謝您的耐心等待與配合"]},
+        {title:"常用詞彙", items:["建議修改","持續例行工作"]}
     ];
-    let isEditMode = false, currentProjIdx = null;
+    let currentProjIdx = null, isEditMode = false;
 
     function save() { localStorage.setItem('hosega_v5_data', JSON.stringify(projects)); }
 
     function render() {
         const app = document.getElementById('app'); app.innerHTML = '';
         projects.forEach((proj, pIdx) => {
-            const block = document.createElement('div');
-            block.className = `project-block block-${pIdx % 5}`;
-            
-            const tagsHtml = proj.items.map((item, tIdx) => `
-                <div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}" data-name="${item}">
-                    <button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button>
-                    <div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div>
-                </div>`).join('');
-
-            block.innerHTML = `
-                <div class="project-title">
-                    <div class="project-title-text">${proj.title}</div>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        ${isEditMode ? `
-                            <button onclick="editTitle(${pIdx})">✏️</button>
-                            <button onclick="deleteProject(${pIdx})">🗑️</button>
-                            <div class="drag-handle">☰</div>` : ''}
-                    </div>
-                </div>
-                <div class="tag-container" data-pidx="${pIdx}">
-                    ${tagsHtml}
-                    ${isEditMode ? '' : `<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button>`}
-                </div>`;
+            const block = document.createElement('div'); block.className = `project-block block-${pIdx % 5}`;
+            const actions = isEditMode ? `<div style="display:flex; gap:12px;"><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="editTitle(${pIdx})">✏️</button><button style="background:none;border:none;cursor:pointer;font-size:16px;" onclick="deleteProject(${pIdx})">🗑️</button></div>` : '';
+            let tagsHtml = proj.items.map((item, tIdx) => `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}" style="position:relative; display:inline-block;"><button class="tag" onclick="handleTagClick('${item.replace(/'/g, "\\'")}')">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`).join('');
+            block.innerHTML = `<div class="project-title"><div class="project-title-text">${proj.title}</div>${actions}</div><div class="tag-container">${tagsHtml}<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button></div>`;
             app.appendChild(block);
         });
-        initSortable();
     }
 
-    function initSortable() {
-        // 專案排序
-        new Sortable(document.getElementById('app'), {
-            animation: 150, handle: '.drag-handle', ghostClass: 'sortable-ghost',
-            onEnd: (evt) => {
-                const moved = projects.splice(evt.oldIndex, 1)[0];
-                projects.splice(evt.newIndex, 0, moved);
-                save(); render();
-            }
-        });
-
-        // 標籤跨專案排序核心
-        document.querySelectorAll('.tag-container').forEach(el => {
-            new Sortable(el, {
-                group: 'sharedTags', // 關鍵：設定相同的群組名稱即可跨專案拖拉
-                animation: 150,
-                disabled: !isEditMode,
-                ghostClass: 'sortable-ghost',
-                filter: '.add-btn-trigger',
-                onEnd: (evt) => {
-                    const fromIdx = parseInt(evt.from.dataset.pidx);
-                    const toIdx = parseInt(evt.to.dataset.pidx);
-                    
-                    // 從原專案取出並放入新專案
-                    const movedTag = projects[fromIdx].items.splice(evt.oldIndex, 1)[0];
-                    projects[toIdx].items.splice(evt.newIndex, 0, movedTag);
-                    
-                    save();
-                    // 為了確保標籤變色（如果專案顏色不同），移動後建議重新整理
-                    render();
-                }
-            });
-        });
-    }
-
-    function toggleEdit() { isEditMode = !isEditMode; document.getElementById('settingBtn').classList.toggle('active', isEditMode); render(); }
-    async function handleTagClick(text) { if(isEditMode) return; await navigator.clipboard.writeText(text); showToast("已複製 ✨"); }
+    async function handleTagClick(text) { if(isEditMode) return; try { await navigator.clipboard.writeText(text); showToast("已複製 ✨"); } catch(e) { alert("複製失敗"); } }
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 1500); }
-    function openModal(idx) { currentProjIdx = idx; document.getElementById('modal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function openModal(idx) { currentProjIdx = idx; document.getElementById('modal').style.display = 'flex'; document.getElementById('tagInput').focus(); }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; document.getElementById('tagInput').value = ''; }
     function saveNewTag() { const val = document.getElementById('tagInput').value.trim(); if(val) { projects[currentProjIdx].items.push(val); save(); render(); closeModal(); } }
+    function toggleEdit() { isEditMode = !isEditMode; render(); }
     function removeTag(p, t) { projects[p].items.splice(t, 1); save(); render(); }
-    function addNewProject() { const name = prompt("名稱"); if(name) { projects.push({title: name, items: []}); save(); render(); } }
-    function editTitle(idx) { const n = prompt("修改", projects[idx].title); if(n) { projects[idx].title = n; save(); render(); } }
-    function deleteProject(idx) { if(confirm("確定？")) { projects.splice(idx, 1); save(); render(); } }
-    function exportData() { /* ... 同前 ... */ }
+    function addNewProject() { const name = prompt("新增專案名稱"); if(name) { projects.push({title: name, items: []}); save(); render(); } }
+    function editTitle(idx) { const newTitle = prompt("修改專案名稱", projects[idx].title); if(newTitle) { projects[idx].title = newTitle; save(); render(); } }
+    function deleteProject(idx) { if(confirm(`確定要刪除「${projects[idx].title}」專案嗎？`)) { projects.splice(idx, 1); save(); render(); } }
+    function exportData() { const blob = new Blob([JSON.stringify(projects, null, 2)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `HoSeGa_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast("備份下載成功 ✨"); }
     function triggerImport() { document.getElementById('importFile').click(); }
-    function importData(input) { /* ... 同前 ... */ }
+    function importData(input) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (e) => { try { projects = JSON.parse(e.target.result); save(); render(); showToast("資料還原成功！"); } catch(err) { alert("檔案格式不符"); } }; reader.readAsText(file); }
 
     render();
 </script>
+
 </body>
 </html>
