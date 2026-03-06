@@ -52,6 +52,21 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.08);
         }
 
+        /* 搜尋模式下的置頂按鈕 */
+        .pin-to-top-btn {
+            display: none;
+            background: #444;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-left: 10px;
+            opacity: 0.8;
+        }
+        .is-filtering .pin-to-top-btn { display: inline-block; }
+
         /* --- 2. 頁面組件 --- */
         .app-header { text-align: center; margin: 30px 0 10px; position: relative; }
         .app-header h1 { margin: 0; font-size: 28px; color: #333; font-weight: 800; letter-spacing: -0.5px; }
@@ -161,7 +176,7 @@
         .cancel-btn { background: none; border: none; color: #999; padding: 10px 20px; cursor: pointer; }
     </style>
 </head>
-<body>
+<body class="">
 
 <div class="app-header">
     <div class="search-wrapper">
@@ -182,18 +197,10 @@
         <div class="project-title-text" style="color: #F57F17;">✨ 支持好勢貼持續進化</div>
     </div>
     <div class="tag-container" style="justify-content: center; padding: 15px 0;">
-        <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" 
-           style="background: #E8F5E9; color: #2E7D32; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">
-           ☕ 熱情贊助支持
-        </a>
-        <a href="https://www.effectivegatecpm.com/fdz03i5n6h?key=61a4e11311da9b2dc2212a87673511c7" target="_blank" class="tag" 
-           style="background: #E3F2FD; color: #1565C0; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">
-           🚀 點擊廣告支持
-        </a>
+        <a href="https://p.ecpay.com.tw/5C353D6" target="_blank" class="tag" style="background: #E8F5E9; color: #2E7D32; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">☕ 熱情贊助支持</a>
+        <a href="https://www.effectivegatecpm.com/fdz03i5n6h?key=61a4e11311da9b2dc2212a87673511c7" target="_blank" class="tag" style="background: #E3F2FD; color: #1565C0; text-decoration: none; width: 44%; text-align: center; font-weight: bold;">🚀 點擊廣告支持</a>
     </div>
-    <p style="text-align: center; font-size: 11px; color: #999; margin-top: 10px;">
-        您的支持將用於維護伺服器與開發
-    </p>
+    <p style="text-align: center; font-size: 11px; color: #999; margin-top: 10px;">您的支持將用於維護伺服器與開發</p>
 </div>
 
 <div id="about-us" class="content-doc">
@@ -239,14 +246,8 @@
 
 <div id="ad-banner" class="ad-banner-container">
     <div class="ad-wrapper">
-        <div class="ad-desktop">
-            <script type="text/javascript">atOptions = { 'key' : 'df7e287c01baadc380f8c97edf6ebd34', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };</script>
-            <script type="text/javascript" src="https://www.highperformanceformat.com/df7e287c01baadc380f8c97edf6ebd34/invoke.js"></script>
-        </div>
-        <div class="ad-mobile">
-            <script type="text/javascript">atOptions = { 'key' : 'b7090a104cf725dcafeb06f9fea26f97', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };</script>
-            <script type="text/javascript" src="https://www.highperformanceformat.com/b7090a104cf725dcafeb06f9fea26f97/invoke.js"></script>
-        </div>
+        <div class="ad-desktop"><script type="text/javascript">atOptions = { 'key' : 'df7e287c01baadc380f8c97edf6ebd34', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };</script><script type="text/javascript" src="https://www.highperformanceformat.com/df7e287c01baadc380f8c97edf6ebd34/invoke.js"></script></div>
+        <div class="ad-mobile"><script type="text/javascript">atOptions = { 'key' : 'b7090a104cf725dcafeb06f9fea26f97', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };</script><script type="text/javascript" src="https://www.highperformanceformat.com/b7090a104cf725dcafeb06f9fea26f97/invoke.js"></script></div>
     </div>
 </div>
 
@@ -275,11 +276,22 @@
         projects.forEach((proj, pIdx) => {
             const block = document.createElement('div'); block.className = `project-block block-${pIdx % 5}`;
             const actions = isEditMode ? `<div style="display:flex; gap:12px;"><button style="background:none;border:none;cursor:pointer;" onclick="editTitle(${pIdx})">✏️</button><button style="background:none;border:none;cursor:pointer;color:#FF5252;" onclick="deleteProject(${pIdx})">🗑️</button></div>` : '';
+            
             let tagsHtml = proj.items.map((item, tIdx) => {
                 const escaped = item.replace(/"/g, '&quot;');
-                return `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}" style="position:relative; display:inline-block;"><button class="tag" data-text="${escaped}" onclick="handleTagClick(this.dataset.text, ${pIdx})">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`;
+                return `<div class="tag-wrapper ${isEditMode ? 'is-editing' : ''}" style="position:relative; display:inline-block;"><button class="tag" data-text="${escaped}" onclick="handleTagClick(this.dataset.text)">${item}</button><div class="edit-overlay" onclick="removeTag(${pIdx}, ${tIdx})">✕</div></div>`;
             }).join('');
-            block.innerHTML = `<div class="project-title"><div class="project-title-text">${proj.title}</div>${actions}</div><div class="tag-container" data-pidx="${pIdx}">${tagsHtml}${isEditMode ? '' : `<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button>`}</div>`;
+
+            // 加入手動置頂按鈕，預設隱藏
+            block.innerHTML = `
+                <div class="project-title">
+                    <div class="project-title-text">${proj.title} <button class="pin-to-top-btn" onclick="pinProject(${pIdx})">↑ 置頂</button></div>
+                    ${actions}
+                </div>
+                <div class="tag-container" data-pidx="${pIdx}">
+                    ${tagsHtml}
+                    ${isEditMode ? '' : `<button class="add-btn-trigger" onclick="openModal(${pIdx})">+</button>`}
+                </div>`;
             app.appendChild(block);
         });
         initSortable();
@@ -287,6 +299,12 @@
 
     function filterTags() {
         const query = document.getElementById('searchInput').value.toLowerCase();
+        const appContainer = document.getElementById('app');
+        
+        // 切換搜尋模式的 CSS Class
+        if (query !== "") { appContainer.classList.add('is-filtering'); } 
+        else { appContainer.classList.remove('is-filtering'); }
+
         const blocks = document.querySelectorAll('.project-block');
         blocks.forEach(block => {
             if (block.classList.contains('block-4')) return; 
@@ -299,6 +317,17 @@
             });
             block.style.display = (hasMatch || query === "") ? 'block' : 'none';
         });
+    }
+
+    // 新增：手動置頂專案
+    function pinProject(pIdx) {
+        if (pIdx > 0) {
+            const movedProj = projects.splice(pIdx, 1)[0];
+            projects.unshift(movedProj);
+            save(); render();
+            // 置頂後若搜尋框有文字，維持篩選狀態
+            if (document.getElementById('searchInput').value !== "") filterTags();
+        }
     }
 
     function initSortable() {
@@ -318,17 +347,13 @@
         });
     }
 
-    async function handleTagClick(text, pIdx) {
+    // 修正：handleTagClick 現在只負責複製文字
+    async function handleTagClick(text) {
         if(isEditMode) return;
         try {
             await navigator.clipboard.writeText(text);
             showToast("已複製 ✨");
-            if (pIdx > 0) {
-                const movedProj = projects.splice(pIdx, 1)[0];
-                projects.unshift(movedProj);
-                save(); render();
-                if (document.getElementById('searchInput').value) filterTags();
-            }
+            // 這裡不再執行置頂邏輯，保持使用者操作直覺
         } catch(e) { alert("複製失敗"); }
     }
 
